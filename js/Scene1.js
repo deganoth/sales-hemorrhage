@@ -6,6 +6,7 @@ class Scene1 extends Phaser.Scene {
     }
     
     preload(){
+        this.load.image("start", "assets/images/start-game.png");
         this.load.image("sky", "assets/images/sky2.png");
         this.load.image("bomb", "assets/images/bomb.png");
         this.load.image("star", "assets/images/star.png");
@@ -15,7 +16,6 @@ class Scene1 extends Phaser.Scene {
     create(){
         
         this.add.text(20,20, "Loading Game....");
-        
         //loads the scene stated in the brackets
         this.scene.start("playGame");
     }

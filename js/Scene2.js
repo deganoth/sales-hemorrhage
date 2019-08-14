@@ -6,14 +6,14 @@ class Scene2 extends Phaser.Scene {
     }
 
     create() {
-        this.sky = this.add.tileSprite(0, 0, config.width, config.height, "sky");
+        this.sky = this.add.tileSprite(0, 0, game.config.width, game.config.height, "sky").setDisplaySize(game.config.width, game.config.height);;
 
         //userful for setting offset or pivot at top left of screen. Image picot determined by origin 
         this.sky.setOrigin(0, 0);
 
-        this.bomb1 = this.add.image(config.width / 2 - 50, config.height / 2, "bomb").setScale(2);
-        this.star = this.add.image(config.width / 2, config.height / 2, "star").setScale(3);
-        this.bomb2 = this.add.image(config.width / 2 + 50, config.height / 2, "bomb");
+        this.bomb1 = this.add.image(game.config.width / 2 -50, game.config.height / 2, "bomb").setScale(2);
+        this.star = this.add.image(game.config.width / 2, game.config.height / 2, "star").setScale(3);
+        this.bomb2 = this.add.image(game.config.width / 2 + 50, game.config.height / 2, "bomb");
 
 
         this.add.text(20, 20, "Playing Game!", {
@@ -24,14 +24,14 @@ class Scene2 extends Phaser.Scene {
 
     moveBomb(bomb, speed) {
         bomb.y += speed;
-        if (bomb.y > config.height) {
+        if (bomb.y > game.config.height) {
             this.resetBombPosition(bomb);
         }
     }
 
     resetBombPosition(bomb) {
         bomb.y = 0;
-        var topX = Phaser.Math.Between(0, config.width);
+        var topX = Phaser.Math.Between(0, game.config.width);
         bomb.x = topX;
     }
 
