@@ -14,9 +14,13 @@ class Scene1 extends Phaser.Scene {
     }
     
     create(){
+        this.start = this.add.sprite(game.config.width / 2, game.config.height / 2, 'start').setInteractive();
         
         this.add.text(20,20, "Loading Game....");
         //loads the scene stated in the brackets
-        this.scene.start("playGame");
+        this.start.on('pointerdown', function(pointer){
+             this.scene.start("playGame");
+        }, this);
+       
     }
 }
