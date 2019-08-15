@@ -1,47 +1,41 @@
-
+var particles;
 
 //recives contorl from the primary game created
 class Scene2 extends Phaser.Scene {
     constructor() {
         //scene identifier is playGame
         super("playGame");
-        
+
     }
-    
+
     create() {
-        
+
         this.sky = this.add.tileSprite(0, 0, game.config.width, game.config.height, "sky").setDisplaySize(game.config.width, game.config.height);;
 
         //userful for setting offset or pivot at top left of screen. Image picot determined by origin 
         this.sky.setOrigin(0, 0);
-        
-        this.bomb1 = this.add.image(game.config.width / 2 - 50, game.config.height / 2, "bomb").setScale(2);
-        this.bomb3 = this.add.image(game.config.width / 2, game.config.height / 2, "bomb").setScale(3);
-        this.bomb2 = this.add.image(game.config.width / 2 + 50, game.config.height / 2, "bomb");
 
-        this.add.text(game.config.width / 2.5, 20, "Playing Game!", {
-            font: "25px Arial",
-            fill: "yellow"
-        });
+        this.bomb1 = this.add.sprite(game.config.width / 2 - 50, game.config.height / 2, "bomb").setScale(2);
+        this.bomb3 = this.add.sprite(game.config.width / 2, game.config.height / 2, "bomb").setScale(3);
+        this.bomb2 = this.add.sprite(game.config.width / 2 + 50, game.config.height / 2, "bomb");
 
-        var particles = this.add.particles('bomb');
-        
-        var trailSpeed = Phaser.Math.Between(0, 3);
-        
-        var bombSpeed = Phaser.Math.Between(1, 3);
-        
+        //this.explode = this.add.sprite(game.config.width / 2 + 50, game.config.height / 2, "explode");
+
+        particles = this.add.particles('bomb');
+
         var emitter = particles.createEmitter({
             speed: 30,
             scale: { start: 1, end: 0 },
-            blendMode: 'SCREEN'
+            blendMode: 'SCREEN',
+           
         });
-        
+
         var emitter2 = particles.createEmitter({
             speed: 20,
             scale: { start: 1, end: 0 },
             blendMode: 'SCREEN'
-        }); 
-        
+        });
+
         var emitter3 = particles.createEmitter({
             speed: 45,
             scale: { start: 1, end: 0 },
@@ -51,6 +45,23 @@ class Scene2 extends Phaser.Scene {
         emitter.startFollow(this.bomb1);
         emitter2.startFollow(this.bomb2);
         emitter3.startFollow(this.bomb3);
+
+        this.anims.create({
+            key: "explode_anim",
+            frames: this.anims.generateFrameNumbers("explode"),
+            frameRate: 15,
+            repeat: 0,
+            hideOnComplete: true
+
+        });
+        
+        //this.explode.play("explode_anim");
+        
+        this.bomb1.setInteractive();
+        this.bomb2.setInteractive();
+        this.bomb3.setInteractive();
+        
+        this.input.on('gameobjectdown', this.destroyBomb, this);
     }
 
     moveBomb(bomb, speed) {
@@ -77,7 +88,7 @@ class Scene2 extends Phaser.Scene {
 
     update() {
         var bombSpeed = Phaser.Math.Between(1, 3);
-        
+
         //calls the moveBomb function for each bomb on screen. The number assigned relates to a speed value decided by Phaser 
         this.moveBomb(this.bomb1, 1);
         this.moveBomb(this.bomb3, 2);
@@ -92,5 +103,9 @@ class Scene2 extends Phaser.Scene {
 
     }
 
-
+    destroyBomb(pointer, gameObject){
+        gameObject.setTexture("explode");
+        gameObject.play("explode_anim");
+        particles.destroy();
+    }
 }
