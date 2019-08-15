@@ -8,9 +8,19 @@ var config = {
         width: 750,
         height: 1334
     },
+    physics: {
+        default: 'arcade',
+
+        //arcade property settings
+        arcade: {
+            gravity: { y: 200, },
+            debug: false
+        }
+    },
     input: {
         activePointers: 5,
     },
     scene: [Scene1, Scene2]
 };
 var game = new Phaser.Game(config);
+
