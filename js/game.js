@@ -12,7 +12,8 @@ var config = {
         default: 'arcade',
         //arcade property settings
         arcade: {
-            debug: false
+            debug: false,
+            //gravity: {y: 100}
         }
     },
     input: {
