@@ -13,7 +13,7 @@ var config = {
         //arcade property settings
         arcade: {
             debug: false,
-            //gravity: {y: 100}
+            gravity: {y: 10}
         }
     },
     input: {
