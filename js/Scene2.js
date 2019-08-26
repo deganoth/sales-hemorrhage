@@ -1,12 +1,12 @@
 //var particles;
 //var emitter;
+var sky;
 var player;
 var soulBar;
-var graphics;
+var ground;
 var score = 0;
-var scoreText;
-var soul = 0;
 var salesBar;
+var soul = 0;
 var sales = 0;
 var bombs;
 var singleBomb;
@@ -23,10 +23,15 @@ class Scene2 extends Phaser.Scene {
 
     create() {
 
-        this.sky = this.add.tileSprite(0, 0, game.config.width, game.config.height, "sky").setDisplaySize(game.config.width, game.config.height);
+        sky = this.add.tileSprite(0, 0, game.config.width, game.config.height, "sky")
+            .setDisplaySize(game.config.width, game.config.height)
 
-        //userful for setting offset or pivot at top left of screen. Image picot determined by origin 
-        this.sky.setOrigin(0, 0);
+            //userful for setting offset or pivot at top left of screen. Image picot determined by origin 
+            .setOrigin(0, 0);
+        ground = this.physics.add.staticImage(game.config.width / 2, game.config.height / 1, 'sales')
+            .setDisplaySize(game.config.width, game.config.height / 20)
+            .setDepth(1)
+            .refreshBody();
 
         this.makePlayer();
 
@@ -78,12 +83,11 @@ class Scene2 extends Phaser.Scene {
         controls = this.input.keyboard.addKeys('W,S,A,D');
 
         this.physics.add.overlap(player, bombs, this.destroyBomb, null, this);
-
-
+        this.physics.add.collider(player, ground);
     }
 
     update() {
-        this.sky.tilePositionY += 0.5;
+        sky.tilePositionY += 0.5;
         this.resetBomb();
         this.resetSingleBomb();
 
@@ -102,22 +106,23 @@ class Scene2 extends Phaser.Scene {
 
         if (cursors.up.isDown || controls.W.isDown) {
             player.setVelocityY(-400);
+
         }
-        else if (cursors.down.isDown || controls.S.isDown) {
+        /*else if (cursors.down.isDown || controls.S.isDown) {
             player.setVelocityY(400);
         }
         else {
             player.setVelocityY(0);
-            //player.anims.play('turn', true);
-        }
+
+        }*/
     }
 
     makePlayer() {
         player = this.physics.add.sprite(game.config.width / 2, game.config.height / 1.1, 'dude')
             .setDisplaySize(game.config.height / 14.2, game.config.height / 10)
             .setInteractive()
-            .setCollideWorldBounds(true);
-        //.setGravityY(15000);
+            .setCollideWorldBounds(true)
+            .setGravityY(4000);
     }
 
     makeSingleBomb() {
@@ -151,10 +156,10 @@ class Scene2 extends Phaser.Scene {
     destroySingleBomb(player, bomb_2, bomb) {
 
         score += 100;
-        scoreText.setText('score: ' + score);
+        salesBar.setText('sales:$' + score);
 
-        soul += 20;
-        soulBar.setDisplaySize(game.config.width - soul, 30);
+        soul -= 2;
+        soulBar.setText('soul:' + soul);
 
         bomb_2.disableBody(true, true);
         if (singleBomb.countActive(true) === 0) {
@@ -199,10 +204,10 @@ class Scene2 extends Phaser.Scene {
         this.makeSingleBomb();
 
         score += 50;
-        scoreText.setText('score: ' + score);
+        salesBar.setText('sales:$' + score);
 
         soul += 5;
-        soulBar.setDisplaySize(game.config.width - soul, 30);
+        soulBar.setText('soul:' + soul);
 
         bomb.disableBody(true, true);
         if (bombs.countActive(true) === 0) {
@@ -215,31 +220,22 @@ class Scene2 extends Phaser.Scene {
         }
     }
 
-
-
     makeHud() {
-        soulBar = this.add.image(20, 20, "soul")
-            .setDepth(1)
-            .setDisplaySize(game.config.width - 30, 30)
-            .setOrigin(0);
-
-        graphics = this.add.graphics({
-            x: 0,
-            y: 0,
-            //fill: '#000',
-            lineStyle: {
-                thickness: 100,
-                color: 0xffff00,
-                alpha: 1,
-            }
-        });
-
-        scoreText = this.add.text(20, 50, 'score: 0')
+        soulBar = this.add.text(20, 0, 'soul:')
             .setDepth(1)
             .setStyle({
-                fontSize: 30,
+                fontSize: 60,
+                fill: '#fff',
+                backgroundColor: '#FF0000'
+            })
+            .setOrigin(0);
+
+        salesBar = this.add.text(20, 60, 'sales:$0')
+            .setDepth(1)
+            .setStyle({
+                fontSize: 60,
                 fill: '#000',
-                backgroundColor: '#68FF75'
+                backgroundColor: '#68FF75',
             })
             .setOrigin(0);
     }
