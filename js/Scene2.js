@@ -1,6 +1,13 @@
 //var particles;
 //var emitter;
 var player;
+var soulBar;
+var graphics;
+var score = 0;
+var scoreText;
+var soul = 0;
+var salesBar;
+var sales = 0;
 var bombs;
 var singleBomb;
 var cursors;
@@ -26,6 +33,8 @@ class Scene2 extends Phaser.Scene {
         this.makeBombs();
 
         this.makeSingleBomb();
+
+        this.makeHud();
 
         this.anims.create({
             key: "bomb_anim",
@@ -104,16 +113,16 @@ class Scene2 extends Phaser.Scene {
     }
 
     makePlayer() {
-        player = this.physics.add.sprite(this.scale.width / 5, this.scale.height / 2, 'dude')
-            .setDisplaySize(this.scale.height / 14.2, this.scale.height / 10)
+        player = this.physics.add.sprite(game.config.width / 2, game.config.height / 1.1, 'dude')
+            .setDisplaySize(game.config.height / 14.2, game.config.height / 10)
             .setInteractive()
-            .setCollideWorldBounds(true)
-            .setGravityY(15000);
+            .setCollideWorldBounds(true);
+        //.setGravityY(15000);
     }
 
     makeSingleBomb() {
         singleBomb = this.physics.add.group({
-            key: 'bomb',
+            key: 'bomb_2',
             repeat: 0,
             collideWorldBounds: false
         });
@@ -126,7 +135,36 @@ class Scene2 extends Phaser.Scene {
             child.y = 0;
         });
 
-        this.physics.add.overlap(player, singleBomb, this.destroyBomb, null, this);
+        this.physics.add.overlap(player, singleBomb, this.destroySingleBomb, null, this);
+    }
+
+    resetSingleBomb(bomb_2) {
+        singleBomb.children.iterate(function(child) {
+            if (child.y > game.config.height) {
+                child.y = 0;
+                var respawnX = Phaser.Math.Between(0, game.config.width);
+                child.x = respawnX;
+            }
+        });
+    }
+
+    destroySingleBomb(player, bomb_2, bomb) {
+
+        score += 100;
+        scoreText.setText('score: ' + score);
+
+        soul += 20;
+        soulBar.setDisplaySize(game.config.width - soul, 30);
+
+        bomb_2.disableBody(true, true);
+        if (singleBomb.countActive(true) === 0) {
+            singleBomb.children.iterate(function(child) {
+                child.enableBody(true, child.x, 0, true, true)
+                    .setVelocityY(Phaser.Math.Between(120, 200))
+                    .setRandomPosition(Phaser.Math.Between(game.config.width / 10, game.config.width / 5), 0, game.config.width, game.config.height);
+                child.y = 0;
+            });
+        }
     }
 
     makeBombs() {
@@ -144,17 +182,6 @@ class Scene2 extends Phaser.Scene {
             //child.y = 0;
         });
 
-        //this.input.on('gameobjectdown', this.destroyBomb, this);
-    }
-
-    resetSingleBomb(bomb) {
-        singleBomb.children.iterate(function(child) {
-            if (child.y > game.config.height) {
-                child.y = 0;
-                var respawnX = Phaser.Math.Between(0, game.config.width);
-                child.x = respawnX;
-            }
-        });
     }
 
     //resets the position of each bomb in the group
@@ -170,6 +197,13 @@ class Scene2 extends Phaser.Scene {
 
     destroyBomb(player, bomb) {
         this.makeSingleBomb();
+
+        score += 50;
+        scoreText.setText('score: ' + score);
+
+        soul += 5;
+        soulBar.setDisplaySize(game.config.width - soul, 30);
+
         bomb.disableBody(true, true);
         if (bombs.countActive(true) === 0) {
             bombs.children.iterate(function(child) {
@@ -181,4 +215,32 @@ class Scene2 extends Phaser.Scene {
         }
     }
 
+
+
+    makeHud() {
+        soulBar = this.add.image(20, 20, "soul")
+            .setDepth(1)
+            .setDisplaySize(game.config.width - 30, 30)
+            .setOrigin(0);
+
+        graphics = this.add.graphics({
+            x: 0,
+            y: 0,
+            //fill: '#000',
+            lineStyle: {
+                thickness: 100,
+                color: 0xffff00,
+                alpha: 1,
+            }
+        });
+
+        scoreText = this.add.text(20, 50, 'score: 0')
+            .setDepth(1)
+            .setStyle({
+                fontSize: 30,
+                fill: '#000',
+                backgroundColor: '#68FF75'
+            })
+            .setOrigin(0);
+    }
 }
