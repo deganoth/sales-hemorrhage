@@ -4,14 +4,22 @@ var sky;
 var player;
 var soulBar;
 var ground;
-var score = 0;
+var soulValue;
 var salesBar;
 var soul = 0;
+var soulBarBackground;
 var sales = 0;
+var health;
+var healthShield;
+var shieldStart;
+var shieldEnd;
+var stars;
 var bombs;
 var singleBomb;
 var cursors;
 var controls;
+var gameOver = false;
+
 
 //recives contorl from the primary game created
 class Scene2 extends Phaser.Scene {
@@ -20,7 +28,6 @@ class Scene2 extends Phaser.Scene {
         super("playGame");
 
     }
-
     create() {
 
         sky = this.add.tileSprite(0, 0, game.config.width, game.config.height, "sky")
@@ -34,6 +41,10 @@ class Scene2 extends Phaser.Scene {
             .refreshBody();
 
         this.makePlayer();
+
+        this.makeHealth();
+
+        this.makeStars();
 
         this.makeBombs();
 
@@ -54,7 +65,6 @@ class Scene2 extends Phaser.Scene {
             frameRate: 15,
             repeat: 0,
             hideOnComplete: true,
-
         });
 
         this.anims.create({
@@ -84,12 +94,26 @@ class Scene2 extends Phaser.Scene {
 
         this.physics.add.overlap(player, bombs, this.destroyBomb, null, this);
         this.physics.add.collider(player, ground);
+        //this.physics.add.collider(player, bombs);
+        this.physics.add.collider(stars, player);
     }
 
     update() {
         sky.tilePositionY += 0.5;
         this.resetBomb();
         this.resetSingleBomb();
+        this.gameEnd();
+
+        //set's the XY co oridnates for the stars by attaching them to the health object as a shield
+        Phaser.Actions.SetXY([healthShield], health.x, health.y);
+
+        //defines the circle start and finish points, along with which object to place on it.
+        Phaser.Actions.PlaceOnCircle(
+            stars.getChildren(),
+            healthShield,
+            shieldStart.getValue(),
+            shieldEnd.getValue()
+        );
 
         if (cursors.left.isDown || controls.A.isDown) {
             player.setVelocityX(-400);
@@ -125,6 +149,52 @@ class Scene2 extends Phaser.Scene {
             .setGravityY(4000);
     }
 
+    makeHealth() {
+        health = this.physics.add.sprite(game.config.width / 2, game.config.height / 1.1, 'bomb_3')
+            .setVelocityY(Phaser.Math.Between(120, 200))
+            .setScale(Phaser.Math.Between(3, 4))
+            .setRandomPosition(Phaser.Math.Between(game.config.width / 10, game.config.width / 5), 0, game.config.width, game.config.height)
+            .setInteractive();
+        health.y = 0;
+    }
+
+    makeStars() {
+        stars = this.physics.add.group({
+            key: 'star',
+            repeat: 7,
+            collideWorldBounds: false
+        });
+
+        stars.children.iterate(function(child) {
+            child
+                .setScale(2)
+                //.setRandomPosition(Phaser.Math.Between(game.config.width / 10, game.config.width / 5), 0, game.config.width, game.config.height)
+                .setInteractive();
+            child.y = 0;
+        });
+
+        healthShield = new Phaser.Geom.Circle(health.x, health.y, 60);
+
+        //starts 
+        shieldStart = this.tweens.addCounter({
+            from: 0,
+            to: 10,
+            duration: 5000,
+            repeat: -1,
+            //yoyo: true
+        });
+
+        shieldEnd = this.tweens.addCounter({
+            from: 10,
+            to: 20,
+            duration: 5000,
+            repeat: -1,
+            //yoyo: true
+        });
+
+        //this.physics.add.collider(stars, bombs);
+    }
+
     makeSingleBomb() {
         singleBomb = this.physics.add.group({
             key: 'bomb_2',
@@ -139,6 +209,7 @@ class Scene2 extends Phaser.Scene {
                 .setInteractive();
             child.y = 0;
         });
+
 
         this.physics.add.overlap(player, singleBomb, this.destroySingleBomb, null, this);
     }
@@ -155,11 +226,12 @@ class Scene2 extends Phaser.Scene {
 
     destroySingleBomb(player, bomb_2, bomb) {
 
-        score += 100;
-        salesBar.setText('sales:$' + score);
+        sales += 100;
+        salesBar.setText('sales:$' + sales);
 
-        soul -= 2;
+        soul -= 25;
         soulBar.setText('soul:' + soul);
+        soulBarBackground.setDisplaySize((game.config.width / 1.06) + soul, game.config.width / 12)
 
         bomb_2.disableBody(true, true);
         if (singleBomb.countActive(true) === 0) {
@@ -175,7 +247,7 @@ class Scene2 extends Phaser.Scene {
     makeBombs() {
         bombs = this.physics.add.group({
             key: 'bomb',
-            repeat: 5,
+            repeat: 7,
             collideWorldBounds: false
         });
 
@@ -184,7 +256,7 @@ class Scene2 extends Phaser.Scene {
                 .setScale(Phaser.Math.Between(3, 4))
                 .setRandomPosition(Phaser.Math.Between(game.config.width / 10, game.config.width / 5), 0, game.config.width, game.config.height)
                 .setInteractive();
-            //child.y = 0;
+            child.y = 0;
         });
 
     }
@@ -203,11 +275,12 @@ class Scene2 extends Phaser.Scene {
     destroyBomb(player, bomb) {
         this.makeSingleBomb();
 
-        score += 50;
-        salesBar.setText('sales:$' + score);
+        sales += 50;
+        salesBar.setText('sales:$' + sales);
 
-        soul += 5;
+        soul -= 5;
         soulBar.setText('soul:' + soul);
+        soulBarBackground.setDisplaySize((game.config.width / 1.06) + soul, game.config.width / 12);
 
         bomb.disableBody(true, true);
         if (bombs.countActive(true) === 0) {
@@ -217,26 +290,47 @@ class Scene2 extends Phaser.Scene {
                     .setRandomPosition(Phaser.Math.Between(game.config.width / 10, game.config.width / 5), 0, game.config.width, game.config.height);
                 child.y = 0;
             });
+            this.makeHealth();
         }
     }
 
     makeHud() {
         soulBar = this.add.text(20, 0, 'soul:')
-            .setDepth(1)
+            .setDepth(2)
             .setStyle({
-                fontSize: 60,
+                fontSize: game.config.width / 12,
                 fill: '#fff',
-                backgroundColor: '#FF0000'
+                //backgroundColor: '#FF0000'
             })
+            .setOrigin(0);
+
+
+
+        soulBarBackground = this.add.image(20, 0, 'soul')
+            .setDisplaySize(game.config.width / 1.06, game.config.width / 12)
+            .setDepth(1)
             .setOrigin(0);
 
         salesBar = this.add.text(20, 60, 'sales:$0')
             .setDepth(1)
             .setStyle({
-                fontSize: 60,
+                fontSize: game.config.width / 12,
                 fill: '#000',
                 backgroundColor: '#68FF75',
             })
             .setOrigin(0);
+    }
+
+    gameEnd() {
+        soulValue = soulBarBackground.displayWidth;
+
+        //console.log(soulValue);
+        if (soulValue <= 0) {
+            this.physics.pause();
+            this.anims.remove('left');
+            this.anims.remove('right');
+            gameOver = true;
+        }
+
     }
 }
