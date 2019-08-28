@@ -2,17 +2,16 @@
 //var emitter;
 var sky;
 var player;
+var player2;
 var soulBar;
 var ground;
 var soulValue;
 var salesBar;
 var soul = 0;
 var soulBarBackground;
+var soulBarUpgrade;
 var sales = 0;
 var health;
-var healthShield;
-var shieldStart;
-var shieldEnd;
 var stars;
 var bombs;
 var singleBomb;
@@ -32,23 +31,31 @@ class Scene2 extends Phaser.Scene {
 
         sky = this.add.tileSprite(0, 0, game.config.width, game.config.height, "sky")
             .setDisplaySize(game.config.width, game.config.height)
-
             //userful for setting offset or pivot at top left of screen. Image picot determined by origin 
             .setOrigin(0, 0);
+
         ground = this.physics.add.staticImage(game.config.width / 2, game.config.height / 1, 'sales')
             .setDisplaySize(game.config.width, game.config.height / 20)
             .setDepth(1)
             .refreshBody();
 
-        this.makePlayer();
+        player = this.physics.add.sprite(game.config.width / 2, game.config.height / 1.1, 'dude')
+            .setDisplaySize(game.config.height / 14.2, game.config.height / 10)
+            .setInteractive()
+            .setCollideWorldBounds(true)
+            .setBounce(0.2);
 
-        this.makeHealth();
+        health = this.physics.add.group();
 
-        this.makeStars();
+        stars = this.physics.add.group();
+
+        singleBomb = this.physics.add.group();
+
+        bombs = this.physics.add.group();
+
+        //this.makeHealth();
 
         this.makeBombs();
-
-        this.makeSingleBomb();
 
         this.makeHud();
 
@@ -93,138 +100,133 @@ class Scene2 extends Phaser.Scene {
         controls = this.input.keyboard.addKeys('W,S,A,D');
 
         this.physics.add.overlap(player, bombs, this.destroyBomb, null, this);
+        this.physics.add.overlap(player, singleBomb, this.destroySingleBomb, null, this);
         this.physics.add.collider(player, ground);
-        //this.physics.add.collider(player, bombs);
-        this.physics.add.collider(stars, player);
     }
 
     update() {
-        sky.tilePositionY += 0.5;
-        this.resetBomb();
-        this.resetSingleBomb();
-        this.gameEnd();
+        if (!gameOver) {
+            sky.tilePositionY += 0.5;
+            this.resetBomb();
+            this.resetSingleBomb();
+            this.gameEnd();
 
-        //set's the XY co oridnates for the stars by attaching them to the health object as a shield
-        Phaser.Actions.SetXY([healthShield], health.x, health.y);
+            if (cursors.left.isDown || controls.A.isDown) {
+                player.setVelocityX(-500);
+                player.anims.play('left', true);
+            }
+            else if (cursors.right.isDown || controls.D.isDown) {
+                player.setVelocityX(500);
+                player.anims.play('right', true);
+            }
+            else {
+                player.setVelocityX(0);
+                player.anims.play('turn', true);
+            }
 
-        //defines the circle start and finish points, along with which object to place on it.
-        Phaser.Actions.PlaceOnCircle(
-            stars.getChildren(),
-            healthShield,
-            shieldStart.getValue(),
-            shieldEnd.getValue()
-        );
+            if (cursors.up.isDown && player.body.touching.down || controls.W.isDown && player.body.touching.down) {
+                player.setVelocityY(-800);
 
-        if (cursors.left.isDown || controls.A.isDown) {
-            player.setVelocityX(-400);
-            player.anims.play('left', true);
+            }
+            /*else if (cursors.down.isDown || controls.S.isDown) {
+                player.setVelocityY(400);
+            }
+            else {
+                player.setVelocityY(0);
+
+            }*/
         }
-        else if (cursors.right.isDown || controls.D.isDown) {
-            player.setVelocityX(400);
-            player.anims.play('right', true);
-        }
-        else {
-            player.setVelocityX(0);
-            player.anims.play('turn', true);
-        }
-
-        if (cursors.up.isDown || controls.W.isDown) {
-            player.setVelocityY(-400);
-
-        }
-        /*else if (cursors.down.isDown || controls.S.isDown) {
-            player.setVelocityY(400);
-        }
-        else {
-            player.setVelocityY(0);
-
-        }*/
-    }
-
-    makePlayer() {
-        player = this.physics.add.sprite(game.config.width / 2, game.config.height / 1.1, 'dude')
-            .setDisplaySize(game.config.height / 14.2, game.config.height / 10)
-            .setInteractive()
-            .setCollideWorldBounds(true)
-            .setGravityY(4000);
     }
 
     makeHealth() {
-        health = this.physics.add.sprite(game.config.width / 2, game.config.height / 1.1, 'bomb_3')
-            .setVelocityY(Phaser.Math.Between(120, 200))
-            .setScale(Phaser.Math.Between(3, 4))
-            .setRandomPosition(Phaser.Math.Between(game.config.width / 10, game.config.width / 5), 0, game.config.width, game.config.height)
-            .setInteractive();
-        health.y = 0;
+
+        health = this.physics.add.group({
+            key: 'bomb_3',
+            repeat: 0,
+            collideWorldBounds: true
+        });
+
+        health.children.iterate(function(child) {
+            child
+                .setGravityY(-500)
+                .setVelocity(Phaser.Math.Between(-200, -100), 20)
+                .setScale(Phaser.Math.Between(3, 4))
+                .setRandomPosition(Phaser.Math.Between(game.config.width / 10, game.config.width / 5), 0, game.config.width, game.config.height)
+                .setBounce(0.8)
+                .setInteractive();
+            child.y = -100;
+        });
+
+        this.physics.add.collider(health, ground);
+        this.physics.add.overlap(player, health, this.addHealth, null, this);
+
+        if (soulValue <= 350) {
+            health = this.physics.add.group({
+                key: 'bomb_3',
+                repeat: 3,
+                collideWorldBounds: true
+            });
+
+            health.children.iterate(function(child) {
+                child
+                    .setGravityY(-500)
+                    .setVelocity(Phaser.Math.Between(-200, -100), 20)
+                    .setScale(Phaser.Math.Between(3, 4))
+                    .setRandomPosition(Phaser.Math.Between(game.config.width / 10, game.config.width / 5), 0, game.config.width, game.config.height)
+                    .setBounce(0.8)
+                    .setInteractive();
+                child.y = -100;
+            });
+
+            this.physics.add.collider(health, ground);
+            this.physics.add.overlap(player, health, this.addHealth, null, this);
+        }
     }
 
-    makeStars() {
-        stars = this.physics.add.group({
-            key: 'star',
-            repeat: 7,
-            collideWorldBounds: false
-        });
+    addHealth(player, bomb_3) {
+        sales -= 20;
+        salesBar.setText('sales:$' + sales);
 
-        stars.children.iterate(function(child) {
-            child
-                .setScale(2)
-                //.setRandomPosition(Phaser.Math.Between(game.config.width / 10, game.config.width / 5), 0, game.config.width, game.config.height)
-                .setInteractive();
-            child.y = 0;
-        });
+        soul += 100;
+        soulBar.setText('soul:' + soul);
+        soulBarBackground.setDisplaySize((game.config.width / 1.06) + soul, game.config.width / 12)
 
-        healthShield = new Phaser.Geom.Circle(health.x, health.y, 60);
-
-        //starts 
-        shieldStart = this.tweens.addCounter({
-            from: 0,
-            to: 10,
-            duration: 5000,
-            repeat: -1,
-            //yoyo: true
-        });
-
-        shieldEnd = this.tweens.addCounter({
-            from: 10,
-            to: 20,
-            duration: 5000,
-            repeat: -1,
-            //yoyo: true
-        });
-
-        //this.physics.add.collider(stars, bombs);
+        bomb_3.disableBody(true, true);
     }
 
     makeSingleBomb() {
         singleBomb = this.physics.add.group({
             key: 'bomb_2',
             repeat: 0,
-            collideWorldBounds: false
+            collideWorldBounds: true
         });
 
         singleBomb.children.iterate(function(child) {
-            child.setVelocityY(Phaser.Math.Between(120, 200))
+            child
+                .setVelocity(Phaser.Math.Between(-200, -100), 20)
                 .setScale(Phaser.Math.Between(3, 4))
                 .setRandomPosition(Phaser.Math.Between(game.config.width / 10, game.config.width / 5), 0, game.config.width, game.config.height)
-                .setInteractive();
-            child.y = 0;
+                .setInteractive()
+                .setBounce(0.5);
+            child.y = -100;
         });
 
-
+        this.physics.add.collider(singleBomb, ground);
         this.physics.add.overlap(player, singleBomb, this.destroySingleBomb, null, this);
+
     }
 
     resetSingleBomb(bomb_2) {
         singleBomb.children.iterate(function(child) {
             if (child.y > game.config.height) {
-                child.y = 0;
+                child.y = -100;
                 var respawnX = Phaser.Math.Between(0, game.config.width);
                 child.x = respawnX;
             }
         });
     }
 
-    destroySingleBomb(player, bomb_2, bomb) {
+    destroySingleBomb(player, bomb_2) {
 
         sales += 100;
         salesBar.setText('sales:$' + sales);
@@ -237,9 +239,9 @@ class Scene2 extends Phaser.Scene {
         if (singleBomb.countActive(true) === 0) {
             singleBomb.children.iterate(function(child) {
                 child.enableBody(true, child.x, 0, true, true)
-                    .setVelocityY(Phaser.Math.Between(120, 200))
+                    .setVelocity(Phaser.Math.Between(-200, 200), 20)
                     .setRandomPosition(Phaser.Math.Between(game.config.width / 10, game.config.width / 5), 0, game.config.width, game.config.height);
-                child.y = 0;
+                child.y = -100;
             });
         }
     }
@@ -248,16 +250,20 @@ class Scene2 extends Phaser.Scene {
         bombs = this.physics.add.group({
             key: 'bomb',
             repeat: 7,
-            collideWorldBounds: false
+            collideWorldBounds: true
         });
 
         bombs.children.iterate(function(child) {
-            child.setVelocityY(Phaser.Math.Between(120, 200))
+            child
+                .setVelocity(Phaser.Math.Between(-200, 200), 20)
                 .setScale(Phaser.Math.Between(3, 4))
                 .setRandomPosition(Phaser.Math.Between(game.config.width / 10, game.config.width / 5), 0, game.config.width, game.config.height)
+                .setBounce(0.5)
                 .setInteractive();
-            child.y = 0;
+            child.y = -100;
         });
+
+        this.physics.add.collider(bombs, ground);
 
     }
 
@@ -265,7 +271,7 @@ class Scene2 extends Phaser.Scene {
     resetBomb(bomb) {
         bombs.children.iterate(function(child) {
             if (child.y > game.config.height) {
-                child.y = 0;
+                child.y = -100;
                 var respawnX = Phaser.Math.Between(0, game.config.width);
                 child.x = respawnX;
             }
@@ -286,9 +292,9 @@ class Scene2 extends Phaser.Scene {
         if (bombs.countActive(true) === 0) {
             bombs.children.iterate(function(child) {
                 child.enableBody(true, child.x, 0, true, true)
-                    .setVelocityY(Phaser.Math.Between(120, 200))
+                    .setVelocity(Phaser.Math.Between(-200, 200), 20)
                     .setRandomPosition(Phaser.Math.Between(game.config.width / 10, game.config.width / 5), 0, game.config.width, game.config.height);
-                child.y = 0;
+                child.y = -100;
             });
             this.makeHealth();
         }
@@ -303,8 +309,6 @@ class Scene2 extends Phaser.Scene {
                 //backgroundColor: '#FF0000'
             })
             .setOrigin(0);
-
-
 
         soulBarBackground = this.add.image(20, 0, 'soul')
             .setDisplaySize(game.config.width / 1.06, game.config.width / 12)
@@ -323,13 +327,16 @@ class Scene2 extends Phaser.Scene {
 
     gameEnd() {
         soulValue = soulBarBackground.displayWidth;
+        //console.log(soulValue);
 
         //console.log(soulValue);
         if (soulValue <= 0) {
             this.physics.pause();
-            this.anims.remove('left');
-            this.anims.remove('right');
+            soulBarBackground.setDisplaySize(0, 0);
             gameOver = true;
+        }
+        else if (soulValue > 708) {
+            soulBarBackground.setDisplaySize(game.config.width / 1.06, game.config.width / 12);
         }
 
     }

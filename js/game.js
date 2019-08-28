@@ -12,9 +12,10 @@ var config = {
         default: 'arcade',
         //arcade property settings
         arcade: {
-            //debug: false,
-            gravity: {y: 10}
-        }
+            debug: false,
+            gravity: { y: 600 }
+        },
+        
     },
     input: {
         activePointers: 5,
@@ -22,4 +23,3 @@ var config = {
     scene: [Scene1, Scene2]
 };
 var game = new Phaser.Game(config);
-
