@@ -13,9 +13,19 @@ var config = {
         //arcade property settings
         arcade: {
             debug: false,
-            gravity: { y: 600 }
+            fps: 100,
+            gravity: {
+                y: 600
+            },
+            //checks for collision on each "side" of the screen
+            checkCollision: {
+                up: false,
+                down: false,
+                left: true,
+                right: true
+            },
         },
-        
+
     },
     input: {
         activePointers: 5,

@@ -2,22 +2,23 @@
 //var emitter;
 var sky;
 var player;
-var player2;
+var playerY;
 var soulBar;
 var ground;
+var newGround;
+var groundY;
 var soulValue;
 var salesBar;
 var soul = 0;
 var soulBarBackground;
-var soulBarUpgrade;
 var sales = 0;
 var health;
-var stars;
 var bombs;
 var singleBomb;
 var cursors;
 var controls;
 var gameOver = false;
+var ignore = true;
 
 
 //recives contorl from the primary game created
@@ -34,26 +35,32 @@ class Scene2 extends Phaser.Scene {
             //userful for setting offset or pivot at top left of screen. Image picot determined by origin 
             .setOrigin(0, 0);
 
-        ground = this.physics.add.staticImage(game.config.width / 2, game.config.height / 1, 'sales')
-            .setDisplaySize(game.config.width, game.config.height / 20)
+        //moving ground object to simulate a moving tower
+        /*ground = this.physics.add.sprite(game.config.width / 4, game.config.height / 1, 'sales')
+            .setDisplaySize(game.config.width / 2, game.config.height / 20)
             .setDepth(1)
-            .refreshBody();
+            .setImmovable(true)
+            .setVelocityY(-200);
 
-        player = this.physics.add.sprite(game.config.width / 2, game.config.height / 1.1, 'dude')
+        ground.body.setAllowGravity(false);*/
+
+
+
+        player = this.physics.add.sprite(game.config.width / 1, game.config.height / 3.5, 'dude')
             .setDisplaySize(game.config.height / 14.2, game.config.height / 10)
             .setInteractive()
             .setCollideWorldBounds(true)
             .setBounce(0.2);
 
-        health = this.physics.add.group();
+        ground = this.physics.add.group();
 
-        stars = this.physics.add.group();
+        health = this.physics.add.group();
 
         singleBomb = this.physics.add.group();
 
         bombs = this.physics.add.group();
 
-        //this.makeHealth();
+        this.makeGround();
 
         this.makeBombs();
 
@@ -101,12 +108,13 @@ class Scene2 extends Phaser.Scene {
 
         this.physics.add.overlap(player, bombs, this.destroyBomb, null, this);
         this.physics.add.overlap(player, singleBomb, this.destroySingleBomb, null, this);
-        this.physics.add.collider(player, ground);
+        //this.physics.add.collider(player, ground);
     }
 
     update() {
         if (!gameOver) {
-            sky.tilePositionY += 0.5;
+            sky.tilePositionY -= 0.5;
+            this.resetGround();
             this.resetBomb();
             this.resetSingleBomb();
             this.gameEnd();
@@ -138,12 +146,49 @@ class Scene2 extends Phaser.Scene {
         }
     }
 
-    makeHealth() {
+    makeGround() {
+        ground = this.physics.add.group({
+            key: 'sales',
+            repeat: 2,
+            collideWorldBounds: true,
+            setXY: {
+                x: game.config.width / 4,
+                y: game.config.height / 4,
+                stepX: game.config.width / 2,
+                stepY: game.config.height / 3,
+            },
+        });
 
+        ground.children.iterate(function(child) {
+            child
+                //.setPosition(game.config.width / 4, game.config.height / 1)
+                .setDisplaySize(game.config.width / 1.5, game.config.height / 20)
+                .setDepth(1)
+                .setImmovable(true)
+                .setVelocityY(100);
+
+            child.body.setAllowGravity(false);
+        });
+
+        this.physics.add.collider(player, ground);
+    }
+
+    resetGround(sales) {
+        ground.children.iterate(function(child) {
+            if (child.y > game.config.height) {
+                child.y = 0;
+                //var respawnX = Phaser.Math.Between(0, game.config.width);
+                //ground.x = respawnX;
+            }
+        });
+    }
+
+    makeHealth() {
         health = this.physics.add.group({
             key: 'bomb_3',
             repeat: 0,
             collideWorldBounds: true
+
         });
 
         health.children.iterate(function(child) {
@@ -205,7 +250,7 @@ class Scene2 extends Phaser.Scene {
             child
                 .setVelocity(Phaser.Math.Between(-200, -100), 20)
                 .setScale(Phaser.Math.Between(3, 4))
-                .setRandomPosition(Phaser.Math.Between(game.config.width / 10, game.config.width / 5), 0, game.config.width, game.config.height)
+                .setRandomPosition(Phaser.Math.Between(10, 200), 0, game.config.width, game.config.height)
                 .setInteractive()
                 .setBounce(0.5);
             child.y = -100;
@@ -327,10 +372,10 @@ class Scene2 extends Phaser.Scene {
 
     gameEnd() {
         soulValue = soulBarBackground.displayWidth;
-        //console.log(soulValue);
 
-        //console.log(soulValue);
-        if (soulValue <= 0) {
+        playerY = player.y;
+
+        if (soulValue <= 0 || playerY > game.config.height) {
             this.physics.pause();
             soulBarBackground.setDisplaySize(0, 0);
             gameOver = true;
