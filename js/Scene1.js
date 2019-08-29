@@ -26,7 +26,7 @@ class Scene1 extends Phaser.Scene {
             frameWidth: 24,
             frameHeight: 22
         });
-        this.load.spritesheet("dude", "assets/images/dude.png",{
+        this.load.spritesheet("dude", "assets/images/dude.png", {
             frameWidth: 32,
             frameHeight: 48
         });
@@ -37,13 +37,34 @@ class Scene1 extends Phaser.Scene {
     }
 
     create() {
-        this.start = this.add.sprite(game.config.width / 2, game.config.height / 2, 'start').setInteractive();
+        this.start = this.add.sprite(game.config.width / 2, game.config.height / 2, 'start')
+            .setOrigin(0.5)
+            .setInteractive();
 
-        this.add.text(game.config.width / 2.8, game.config.height / 1.7, "Loading Game....", {
-            font: "30px Arial"
-        });
+        this.add.text(game.config.width / 2, game.config.height / 1.7, "Loading Game....", )
+            .setOrigin(0.5)
+            .setStyle({
+                font: "30px Arial",
+                align: "center",
+                fill: "#B4FBFB"
+            });
+
+        var instructions = [
+            "Controls:",
+            "Jump: W or Up Arrow",
+            "Left: A or left Arrow",
+            "Right: D or Right Arrow"
+        ];
+
+        this.add.text(game.config.width / 2, game.config.height / 3, instructions)
+            .setOrigin(0.5)
+            .setStyle({
+                font: "40px Arial",
+                align: "center",
+                fill: '#21FA00'
+            });
+
         //loads the scene stated in the brackets
-
         //adds button to start game. once clicked, the second scene will be loaded
         this.start.on('pointerdown', function(pointer) {
             this.scene.start("playGame");
