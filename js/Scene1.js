@@ -41,10 +41,18 @@ class Scene1 extends Phaser.Scene {
             .setOrigin(0.5)
             .setInteractive();
 
-        this.add.text(game.config.width / 2, game.config.height / 1.7, "Loading Game....", )
+        var message = [
+            "Reach your",
+            "Sales Target",
+            "Or Keep",
+            "your Soul",
+            "..."
+        ];
+
+        this.add.text(game.config.width / 2, game.config.height / 1.4, message, )
             .setOrigin(0.5)
             .setStyle({
-                font: "30px Arial",
+                font: "50px Lucida Console",
                 align: "center",
                 fill: "#B4FBFB"
             });
@@ -59,7 +67,7 @@ class Scene1 extends Phaser.Scene {
         this.add.text(game.config.width / 2, game.config.height / 3, instructions)
             .setOrigin(0.5)
             .setStyle({
-                font: "40px Arial",
+                font: "40px Lucida Console",
                 align: "center",
                 fill: '#21FA00'
             });
