@@ -46,8 +46,8 @@ class Scene1 extends Phaser.Scene {
             .setInteractive();
 
         var message = [
-            "Reach your",
-            "Sales Target",
+            "Make",
+            "$10,000",
             "Or Keep",
             "your Soul",
             "..."

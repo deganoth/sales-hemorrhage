@@ -23,6 +23,7 @@ var singleBomb;
 var cursors;
 var controls;
 var gameOver = false;
+var gameWin = false;
 var restart;
 
 //recives contorl from the primary game created
@@ -142,13 +143,23 @@ class Scene2 extends Phaser.Scene {
             if (cursors.up.isDown && player.body.touching.down || controls.W.isDown && player.body.touching.down || jump && player.body.touching.down) {
                 player.setVelocityY(-800);
             }
-            /*else if (cursors.down.isDown || controls.S.isDown) {
-                player.setVelocityY(400);
-            }
-            else {
-                player.setVelocityY(0);
 
-            }*/
+            if (soul >= 0) {
+                soulBar.setText('soul:' + 'healthy');
+            }
+            else if (soul >= -187.5) {
+                soulBar.setText('soul:' + 'not bad');
+            }
+            else if (soul >= -375) {
+                soulBar.setText('soul:' + 'worse');
+            }
+            else if (soul >= -562.5) {
+                soulBar.setText('soul:' + 'much worse');
+            }
+            else if (soul >= -680) {
+                soulBar.setText('soul:' + 'doomed');
+
+            }
         }
     }
 
@@ -161,7 +172,7 @@ class Scene2 extends Phaser.Scene {
                 .setOrigin(0)
                 .setAlpha(0.3);
 
-            j = this.add.sprite(game.config.width / 2, game.config.height * 0.925, 'uparrow')
+            j = this.add.sprite(game.config.width / 1.2, game.config.height * 0.925, 'uparrow')
                 .setDisplaySize(200, 200)
                 .setDepth(2)
                 .setInteractive();
@@ -171,7 +182,7 @@ class Scene2 extends Phaser.Scene {
                 .setDepth(2)
                 .setInteractive();
 
-            r = this.add.sprite(game.config.width / 1.2, game.config.height * 0.925, 'rightarrow')
+            r = this.add.sprite(game.config.width / 2, game.config.height * 0.925, 'rightarrow')
                 .setDisplaySize(200, 200)
                 .setDepth(2)
                 .setInteractive();
@@ -299,11 +310,10 @@ class Scene2 extends Phaser.Scene {
     }
 
     addHealth(player, bomb_3) {
-        sales -= 20;
+        sales -= 50;
         salesBar.setText('sales:$' + sales);
 
         soul += 100;
-        soulBar.setText('soul:' + soul);
         soulBarBackground.setDisplaySize((game.config.width / 1.06) + soul, game.config.width / 12)
 
         bomb_3.disableBody(true, true);
@@ -347,7 +357,6 @@ class Scene2 extends Phaser.Scene {
         salesBar.setText('sales:$' + sales);
 
         soul -= 25;
-        soulBar.setText('soul:' + soul);
         soulBarBackground.setDisplaySize((game.config.width / 1.06) + soul, game.config.width / 12)
 
         bomb_2.disableBody(true, true);
@@ -400,7 +409,6 @@ class Scene2 extends Phaser.Scene {
         salesBar.setText('sales:$' + sales);
 
         soul -= 5;
-        soulBar.setText('soul:' + soul);
         soulBarBackground.setDisplaySize((game.config.width / 1.06) + soul, game.config.width / 12);
 
         bomb.disableBody(true, true);
@@ -466,24 +474,49 @@ class Scene2 extends Phaser.Scene {
         }
         else if (soulValue > 708) {
             soulBarBackground.setDisplaySize(game.config.width / 1.06, game.config.width / 12);
-            soul = 0;
+        }
+
+        if (sales >= 10000) {
+            this.physics.pause();
+            gameWin = true;
+            //soul = 0;
             sales = 0;
-            this.restartScreen();
+            this.gameWinScreen();
         }
 
     }
 
     restartScreen() {
         if (gameOver) {
-            restart = this.add.sprite(game.config.width / 2, game.config.height / 2, 'restart')
+
+            var salesNote = salesBar.text;
+            
+            var deathMessage = [
+                "Try Again!",
+                "You Almost reached",
+                "your target!",
+                " ",
+                salesNote,
+                "..."
+            ];
+
+            this.add.text(game.config.width / 2, game.config.height / 2.5, deathMessage, )
+                .setOrigin(0.5)
+                .setStyle({
+                    font: "50px Lucida Console",
+                    align: "center",
+                    fill: "#B4FBFB"
+                }).setDepth(4);
+
+            restart = this.add.sprite(game.config.width / 2, game.config.height / 1.7, 'restart')
                 .setDisplaySize(200, 200)
                 .setInteractive()
-                .setDepth(3);
+                .setDepth(4);
 
             sky = this.add.image(game.config.width / 2, game.config.height / 2, 'sky')
                 .setDisplaySize(game.config.width, game.config.height)
                 .setTint(0xc8c8c8)
-                .setAlpha(0.5)
+                .setAlpha(0.9)
                 .setDepth(3);
 
             //when click, the button will restart the current scene, game over will be false
@@ -492,6 +525,49 @@ class Scene2 extends Phaser.Scene {
                 this.scene.restart();
                 console.log('restart');
                 gameOver = false;
+            }, this);
+        }
+    }
+
+    gameWinScreen() {
+        if (gameWin) {
+
+            var soulWin = soulBar.text;
+
+            var victoryMessage = [
+                "Congratulations!",
+                "You reached your target",
+                "Your Soul however,",
+                " ",
+                soulWin,
+                "..."
+            ];
+
+            this.add.text(game.config.width / 2, game.config.height / 2.5, victoryMessage, )
+                .setOrigin(0.5)
+                .setStyle({
+                    font: "50px Lucida Console",
+                    align: "center",
+                    fill: "#B4FBFB"
+                }).setDepth(4);
+
+            restart = this.add.sprite(game.config.width / 2, game.config.height / 1.7, 'restart')
+                .setDisplaySize(200, 200)
+                .setInteractive()
+                .setDepth(4);
+
+            sky = this.add.image(game.config.width / 2, game.config.height / 2, 'sky')
+                .setDisplaySize(game.config.width, game.config.height)
+                .setTint(0xc8c8c8)
+                .setAlpha(0.9)
+                .setDepth(3);
+
+            //when click, the button will restart the current scene, game over will be false
+            restart.on('pointerdown', function(pointer) {
+                restart.setTintFill(0xffff00, 0xffff00, 0xff0000, 0xff0000);
+                this.scene.restart();
+                console.log('restart');
+                gameWin = false;
             }, this);
         }
     }
