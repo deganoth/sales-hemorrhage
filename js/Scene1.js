@@ -10,6 +10,7 @@ class Scene1 extends Phaser.Scene {
         this.load.image('rightarrow', 'assets/images/right_arrow.png');
         this.load.image('uparrow', 'assets/images/up_arrow.png');
         this.load.image("start", "assets/images/start-game.png");
+        this.load.image('restart', 'assets/images/restart.png');
         this.load.image("sky", "assets/images/sky2.png");
         this.load.image("soul", "assets/images/soul_bar.png");
         this.load.image("sales", "assets/images/sales_bar.png");

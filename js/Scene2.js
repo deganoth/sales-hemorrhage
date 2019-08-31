@@ -23,6 +23,7 @@ var singleBomb;
 var cursors;
 var controls;
 var gameOver = false;
+var restart;
 
 //recives contorl from the primary game created
 class Scene2 extends Phaser.Scene {
@@ -49,7 +50,7 @@ class Scene2 extends Phaser.Scene {
 
 
 
-        player = this.physics.add.sprite(game.config.width / 1, game.config.height / 3.5, 'dude')
+        player = this.physics.add.sprite(game.config.width / 2, game.config.height / 3.5, 'dude')
             .setDisplaySize(game.config.height / 14.2, game.config.height / 10)
             .setInteractive()
             .setCollideWorldBounds(true)
@@ -88,7 +89,7 @@ class Scene2 extends Phaser.Scene {
 
         this.anims.create({
             key: 'left',
-            frames: this.anims.generateFrameNumbers('dude', { start: 1, end: 1 }),
+            frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
             frameRate: 10,
             repeat: -1
         });
@@ -101,7 +102,7 @@ class Scene2 extends Phaser.Scene {
 
         this.anims.create({
             key: 'right',
-            frames: this.anims.generateFrameNumbers('dude', { start: 8, end: 8 }),
+            frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
             frameRate: 10,
             repeat: -1
         });
@@ -140,7 +141,6 @@ class Scene2 extends Phaser.Scene {
 
             if (cursors.up.isDown && player.body.touching.down || controls.W.isDown && player.body.touching.down || jump && player.body.touching.down) {
                 player.setVelocityY(-800);
-
             }
             /*else if (cursors.down.isDown || controls.S.isDown) {
                 player.setVelocityY(400);
@@ -155,12 +155,12 @@ class Scene2 extends Phaser.Scene {
     makeControls() {
         if (this.sys.game.device.input.touch) {
 
-            hudBox = this.add.image(0, game.config.height/1.18, 'soul')
+            hudBox = this.add.image(0, game.config.height / 1.18, 'soul')
                 .setDisplaySize(game.config.width, 200)
                 .setDepth(1)
                 .setOrigin(0)
                 .setAlpha(0.3);
-            
+
             j = this.add.sprite(game.config.width / 2, game.config.height * 0.925, 'uparrow')
                 .setDisplaySize(200, 200)
                 .setDepth(2)
@@ -452,17 +452,47 @@ class Scene2 extends Phaser.Scene {
     }
 
     gameEnd() {
+
         soulValue = soulBarBackground.displayWidth;
         playerY = player.y;
 
-        if (soulValue <= 0 || playerY > game.config.height / 1.3) {
+        if (soulValue <= 0 || playerY > game.config.height / 1.18 && this.sys.game.device.input.touch || playerY > game.config.height) {
             this.physics.pause();
             soulBarBackground.setDisplaySize(0, 0);
             gameOver = true;
+            soul = 0;
+            sales = 0;
+            this.restartScreen();
         }
         else if (soulValue > 708) {
             soulBarBackground.setDisplaySize(game.config.width / 1.06, game.config.width / 12);
+            soul = 0;
+            sales = 0;
+            this.restartScreen();
         }
 
+    }
+
+    restartScreen() {
+        if (gameOver) {
+            restart = this.add.sprite(game.config.width / 2, game.config.height / 2, 'restart')
+                .setDisplaySize(200, 200)
+                .setInteractive()
+                .setDepth(3);
+
+            sky = this.add.image(game.config.width / 2, game.config.height / 2, 'sky')
+                .setDisplaySize(game.config.width, game.config.height)
+                .setTint(0xc8c8c8)
+                .setAlpha(0.5)
+                .setDepth(3);
+
+            //when click, the button will restart the current scene, game over will be false
+            restart.on('pointerdown', function(pointer) {
+                restart.setTintFill(0xffff00, 0xffff00, 0xff0000, 0xff0000);
+                this.scene.restart();
+                console.log('restart');
+                gameOver = false;
+            }, this);
+        }
     }
 }
