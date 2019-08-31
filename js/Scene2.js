@@ -3,7 +3,6 @@
 var sky;
 var player;
 var playerY;
-var up;
 var jump = false;
 var left = false;
 var right = false;
@@ -12,8 +11,7 @@ var l;
 var r;
 var soulBar;
 var ground;
-var newGround;
-var groundY;
+var hudBox;
 var soulValue;
 var salesBar;
 var soul = 0;
@@ -25,8 +23,6 @@ var singleBomb;
 var cursors;
 var controls;
 var gameOver = false;
-var ignore = true;
-
 
 //recives contorl from the primary game created
 class Scene2 extends Phaser.Scene {
@@ -158,17 +154,24 @@ class Scene2 extends Phaser.Scene {
 
     makeControls() {
         if (this.sys.game.device.input.touch) {
-            j = this.add.sprite(game.config.width / 1.2, game.config.height * 0.915, 'uparrow')
+
+            hudBox = this.add.image(0, game.config.height/1.18, 'soul')
+                .setDisplaySize(game.config.width, 200)
+                .setDepth(1)
+                .setOrigin(0)
+                .setAlpha(0.3);
+            
+            j = this.add.sprite(game.config.width / 2, game.config.height * 0.925, 'uparrow')
                 .setDisplaySize(200, 200)
                 .setDepth(2)
                 .setInteractive();
-                
-            l = this.add.sprite(game.config.width / 6, game.config.height * 0.915, 'leftarrow')
+
+            l = this.add.sprite(game.config.width / 6, game.config.height * 0.925, 'leftarrow')
                 .setDisplaySize(200, 200)
                 .setDepth(2)
                 .setInteractive();
-                
-            r = this.add.sprite(game.config.width / 2, game.config.height * 0.915, 'rightarrow')
+
+            r = this.add.sprite(game.config.width / 1.2, game.config.height * 0.925, 'rightarrow')
                 .setDisplaySize(200, 200)
                 .setDepth(2)
                 .setInteractive();
@@ -220,16 +223,17 @@ class Scene2 extends Phaser.Scene {
             setXY: {
                 x: game.config.width / 4,
                 y: game.config.height / 4,
-                stepX: game.config.width / 2,
+                stepX: game.config.width / 5,
                 stepY: game.config.height / 3,
             },
         });
 
         ground.children.iterate(function(child) {
             child
-                //.setPosition(game.config.width / 4, game.config.height / 1)
+                //.setX(Phaser.Math.Between(30, 50))
                 .setDisplaySize(game.config.width / 1.5, game.config.height / 20)
                 .setDepth(1)
+                //.setOrigin(0)
                 .setImmovable(true)
                 .setVelocityY(100);
 
@@ -412,6 +416,17 @@ class Scene2 extends Phaser.Scene {
     }
 
     makeHud() {
+        hudBox = this.physics.add.image(0, 0, 'soul')
+            .setDisplaySize(game.config.width, game.config.width / 6)
+            .setDepth(1)
+            .setOrigin(0)
+            .setAlpha(0.3)
+            .setImmovable(true);
+        hudBox.body.setAllowGravity(false);
+
+        this.physics.add.collider(player, hudBox);
+
+
         soulBar = this.add.text(20, 0, 'soul:')
             .setDepth(2)
             .setStyle({
