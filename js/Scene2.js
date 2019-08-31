@@ -51,7 +51,7 @@ class Scene2 extends Phaser.Scene {
 
 
 
-        player = this.physics.add.sprite(game.config.width / 2, game.config.height / 3.5, 'dude')
+        player = this.physics.add.sprite(game.config.width / 2, game.config.height / 2, 'dude')
             .setDisplaySize(game.config.height / 14.2, game.config.height / 10)
             .setInteractive()
             .setCollideWorldBounds(true)
