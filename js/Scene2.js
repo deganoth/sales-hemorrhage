@@ -3,6 +3,13 @@
 var sky;
 var player;
 var playerY;
+var up;
+var jump = false;
+var left = false;
+var right = false;
+var j;
+var l;
+var r;
 var soulBar;
 var ground;
 var newGround;
@@ -66,6 +73,8 @@ class Scene2 extends Phaser.Scene {
 
         this.makeHud();
 
+        this.makeControls();
+
         this.anims.create({
             key: "bomb_anim",
             frames: this.anims.generateFrameNumbers("bomb"),
@@ -113,17 +122,18 @@ class Scene2 extends Phaser.Scene {
 
     update() {
         if (!gameOver) {
+            //this.makeControls();
             sky.tilePositionY -= 0.5;
             this.resetGround();
             this.resetBomb();
             this.resetSingleBomb();
             this.gameEnd();
 
-            if (cursors.left.isDown || controls.A.isDown) {
+            if (cursors.left.isDown || controls.A.isDown || left) {
                 player.setVelocityX(-500);
                 player.anims.play('left', true);
             }
-            else if (cursors.right.isDown || controls.D.isDown) {
+            else if (cursors.right.isDown || controls.D.isDown || right) {
                 player.setVelocityX(500);
                 player.anims.play('right', true);
             }
@@ -132,7 +142,7 @@ class Scene2 extends Phaser.Scene {
                 player.anims.play('turn', true);
             }
 
-            if (cursors.up.isDown && player.body.touching.down || controls.W.isDown && player.body.touching.down) {
+            if (cursors.up.isDown && player.body.touching.down || controls.W.isDown && player.body.touching.down || jump && player.body.touching.down) {
                 player.setVelocityY(-800);
 
             }
@@ -143,6 +153,62 @@ class Scene2 extends Phaser.Scene {
                 player.setVelocityY(0);
 
             }*/
+        }
+    }
+
+    makeControls() {
+        if (this.sys.game.device.input.touch) {
+            j = this.add.sprite(game.config.width / 1.2, game.config.height * 0.915, 'uparrow')
+                .setDisplaySize(200, 200)
+                .setDepth(2)
+                .setInteractive();
+                
+            l = this.add.sprite(game.config.width / 6, game.config.height * 0.915, 'leftarrow')
+                .setDisplaySize(200, 200)
+                .setDepth(2)
+                .setInteractive();
+                
+            r = this.add.sprite(game.config.width / 2, game.config.height * 0.915, 'rightarrow')
+                .setDisplaySize(200, 200)
+                .setDepth(2)
+                .setInteractive();
+
+            //provides jump function for up arrow display button
+            j.on('pointerdown', function(pointer) {
+                j.setTintFill(0xffff00, 0xffff00, 0xff0000, 0xff0000);
+                jump = true;
+                console.log("jump");
+            }, this);
+
+            //provides left function for up arrow display button
+            l.on('pointerdown', function(pointer) {
+                l.setTintFill(0xffff00, 0xffff00, 0xff0000, 0xff0000);
+                left = true;
+                console.log("left");
+            }, this);
+
+            //provides right function for up arrow display button
+            r.on('pointerdown', function(pointer) {
+                r.setTintFill(0xffff00, 0xffff00, 0xff0000, 0xff0000);
+                right = true;
+                console.log("right");
+            }, this);
+
+            //disengages function when any of the buttons are not being engaged
+            j.on('pointerup', function(pointer) {
+                j.clearTint();
+                jump = false;
+            }, this);
+
+            l.on('pointerup', function(pointer) {
+                l.clearTint();
+                left = false;
+            }, this);
+
+            r.on('pointerup', function(pointer) {
+                r.clearTint();
+                right = false;
+            }, this);
         }
     }
 
@@ -372,10 +438,9 @@ class Scene2 extends Phaser.Scene {
 
     gameEnd() {
         soulValue = soulBarBackground.displayWidth;
-
         playerY = player.y;
 
-        if (soulValue <= 0 || playerY > game.config.height) {
+        if (soulValue <= 0 || playerY > game.config.height / 1.3) {
             this.physics.pause();
             soulBarBackground.setDisplaySize(0, 0);
             gameOver = true;
