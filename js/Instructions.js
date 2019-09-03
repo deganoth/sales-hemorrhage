@@ -1,8 +1,8 @@
 //recives contorl from the primary game created
-class Scene1 extends Phaser.Scene {
+class Instructions extends Phaser.Scene {
     constructor() {
         //scene identifier is bootScene
-        super("bootGame");
+        super("Instructions");
     }
 
     preload() {
@@ -45,7 +45,7 @@ class Scene1 extends Phaser.Scene {
             .setOrigin(0.5)
             .setInteractive();
 
-        var message = [
+        message = [
             "Make",
             "$10,000",
             "Or Keep",
@@ -61,7 +61,7 @@ class Scene1 extends Phaser.Scene {
                 fill: "#B4FBFB"
             });
 
-        var instructions = [
+        instructions = [
             "Controls:",
             "Jump: W or Up Arrow",
             "Left: A or left Arrow",
@@ -79,7 +79,7 @@ class Scene1 extends Phaser.Scene {
         //loads the scene stated in the brackets
         //adds button to start game. once clicked, the second scene will be loaded
         this.start.on('pointerdown', function(pointer) {
-            this.scene.start("playGame");
+            this.scene.start("Level1");
         }, this);
 
     }

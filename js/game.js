@@ -30,6 +30,36 @@ var config = {
     input: {
         activePointers: 5,
     },
-    scene: [Scene1, Scene2]
+    scene: [Instructions, Level1]
 };
+var message = [];
+var instructions = [];
+var sky;
+var player;
+var playerY;
+var jump = false;
+var left = false;
+var right = false;
+var j;
+var l;
+var r;
+var soulBar;
+var soulBall;
+var ground;
+var hudBox;
+var soulValue;
+var salesBar;
+var salesArray;
+var soul = 0;
+var soulBarBackground;
+var sales = 0;
+var health;
+var bombs;
+var singleBomb;
+var cursors;
+var controls;
+var gameOver = false;
+var gameWin = false;
+var restart;
+
 var game = new Phaser.Game(config);

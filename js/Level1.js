@@ -1,36 +1,8 @@
-//var particles;
-//var emitter;
-var sky;
-var player;
-var playerY;
-var jump = false;
-var left = false;
-var right = false;
-var j;
-var l;
-var r;
-var soulBar;
-var ground;
-var hudBox;
-var soulValue;
-var salesBar;
-var soul = 0;
-var soulBarBackground;
-var sales = 0;
-var health;
-var bombs;
-var singleBomb;
-var cursors;
-var controls;
-var gameOver = false;
-var gameWin = false;
-var restart;
-
-//recives contorl from the primary game created
-class Scene2 extends Phaser.Scene {
+//recives control from the primary game created
+class Level1 extends Phaser.Scene {
     constructor() {
         //scene identifier is playGame
-        super("playGame");
+        super("Level1");
 
     }
     create() {
@@ -39,17 +11,6 @@ class Scene2 extends Phaser.Scene {
             .setDisplaySize(game.config.width, game.config.height)
             //userful for setting offset or pivot at top left of screen. Image picot determined by origin 
             .setOrigin(0, 0);
-
-        //moving ground object to simulate a moving tower
-        /*ground = this.physics.add.sprite(game.config.width / 4, game.config.height / 1, 'sales')
-            .setDisplaySize(game.config.width / 2, game.config.height / 20)
-            .setDepth(1)
-            .setImmovable(true)
-            .setVelocityY(-200);
-
-        ground.body.setAllowGravity(false);*/
-
-
 
         player = this.physics.add.sprite(game.config.width / 2, game.config.height / 2, 'dude')
             .setDisplaySize(game.config.height / 14.2, game.config.height / 10)
@@ -120,46 +81,13 @@ class Scene2 extends Phaser.Scene {
 
     update() {
         if (!gameOver) {
-            //this.makeControls();
             sky.tilePositionY -= 0.5;
+            this.updateControls();
             this.resetGround();
             this.resetBomb();
             this.resetSingleBomb();
+            this.soulBarText();
             this.gameEnd();
-
-            if (cursors.left.isDown || controls.A.isDown || left) {
-                player.setVelocityX(-500);
-                player.anims.play('left', true);
-            }
-            else if (cursors.right.isDown || controls.D.isDown || right) {
-                player.setVelocityX(500);
-                player.anims.play('right', true);
-            }
-            else {
-                player.setVelocityX(0);
-                player.anims.play('turn', true);
-            }
-
-            if (cursors.up.isDown && player.body.touching.down || controls.W.isDown && player.body.touching.down || jump && player.body.touching.down) {
-                player.setVelocityY(-800);
-            }
-
-            if (soul >= 0) {
-                soulBar.setText('soul:' + 'healthy');
-            }
-            else if (soul >= -187.5) {
-                soulBar.setText('soul:' + 'not bad');
-            }
-            else if (soul >= -375) {
-                soulBar.setText('soul:' + 'worse');
-            }
-            else if (soul >= -562.5) {
-                soulBar.setText('soul:' + 'much worse');
-            }
-            else if (soul >= -680) {
-                soulBar.setText('soul:' + 'doomed');
-
-            }
         }
     }
 
@@ -223,6 +151,25 @@ class Scene2 extends Phaser.Scene {
                 r.clearTint();
                 right = false;
             }, this);
+        }
+    }
+
+    updateControls() {
+        if (cursors.left.isDown || controls.A.isDown || left) {
+            player.setVelocityX(-500);
+            player.anims.play('left', true);
+        }
+        else if (cursors.right.isDown || controls.D.isDown || right) {
+            player.setVelocityX(500);
+            player.anims.play('right', true);
+        }
+        else {
+            player.setVelocityX(0);
+            player.anims.play('turn', true);
+        }
+
+        if (cursors.up.isDown && player.body.touching.down || controls.W.isDown && player.body.touching.down || jump && player.body.touching.down) {
+            player.setVelocityY(-800);
         }
     }
 
@@ -359,6 +306,7 @@ class Scene2 extends Phaser.Scene {
         soul -= 25;
         soulBarBackground.setDisplaySize((game.config.width / 1.06) + soul, game.config.width / 12)
 
+
         bomb_2.disableBody(true, true);
         if (singleBomb.countActive(true) === 0) {
             singleBomb.children.iterate(function(child) {
@@ -434,7 +382,6 @@ class Scene2 extends Phaser.Scene {
 
         this.physics.add.collider(player, hudBox);
 
-
         soulBar = this.add.text(20, 0, 'soul:')
             .setDepth(2)
             .setStyle({
@@ -459,6 +406,26 @@ class Scene2 extends Phaser.Scene {
             .setOrigin(0);
     }
 
+    soulBarText() {
+
+        if (soul >= 0) {
+            soulBar.setText('soul:' + 'healthy');
+        }
+        else if (soul >= -187.5) {
+            soulBar.setText('soul:' + 'not bad');
+        }
+        else if (soul >= -375) {
+            soulBar.setText('soul:' + 'worse');
+        }
+        else if (soul >= -562.5) {
+            soulBar.setText('soul:' + 'much worse');
+        }
+        else if (soul >= -680) {
+            soulBar.setText('soul:' + 'doomed');
+
+        }
+    }
+
     gameEnd() {
 
         soulValue = soulBarBackground.displayWidth;
@@ -468,8 +435,6 @@ class Scene2 extends Phaser.Scene {
             this.physics.pause();
             soulBarBackground.setDisplaySize(0, 0);
             gameOver = true;
-            soul = 0;
-            sales = 0;
             this.restartScreen();
         }
         else if (soulValue > 708) {
@@ -479,8 +444,6 @@ class Scene2 extends Phaser.Scene {
         if (sales >= 10000) {
             this.physics.pause();
             gameWin = true;
-            //soul = 0;
-            sales = 0;
             this.gameWinScreen();
         }
 
@@ -489,14 +452,12 @@ class Scene2 extends Phaser.Scene {
     restartScreen() {
         if (gameOver) {
 
-            var salesNote = salesBar.text;
-            
             var deathMessage = [
                 "Try Again!",
                 "You Almost reached",
                 "your target!",
                 " ",
-                salesNote,
+                "$" + sales,
                 "..."
             ];
 
@@ -525,6 +486,8 @@ class Scene2 extends Phaser.Scene {
                 this.scene.restart();
                 console.log('restart');
                 gameOver = false;
+                sales = 0;
+                soul = 0;
             }, this);
         }
     }
@@ -532,14 +495,28 @@ class Scene2 extends Phaser.Scene {
     gameWinScreen() {
         if (gameWin) {
 
-            var soulWin = soulBar.text;
+            if (soul >= 0) {
+                soulBar.setText('very good');
+            }
+            else if (soul >= -187.5) {
+                soulBar.setText('okay');
+            }
+            else if (soul >= -375) {
+                soulBar.setText('worse');
+            }
+            else if (soul >= -562.5) {
+                soulBar.setText('much worse');
+            }
+            else if (soul >= -680) {
+                soulBar.setText('terrible');
+            }
 
             var victoryMessage = [
                 "Congratulations!",
                 "You reached your target",
                 "Your Soul however,",
-                " ",
-                soulWin,
+                "did",
+                soulBar.text,
                 "..."
             ];
 
@@ -568,6 +545,8 @@ class Scene2 extends Phaser.Scene {
                 this.scene.restart();
                 console.log('restart');
                 gameWin = false;
+                sales = 0;
+                soul = 0;
             }, this);
         }
     }
