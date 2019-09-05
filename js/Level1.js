@@ -7,15 +7,17 @@ class Level1 extends Phaser.Scene {
     }
     create() {
 
-        sky = this.add.tileSprite(0, 0, game.config.width, game.config.height, "sky")
+        /*sky = this.add.tileSprite(0, 0, game.config.width, game.config.height, "sky")
             .setDisplaySize(game.config.width, game.config.height)
             //userful for setting offset or pivot at top left of screen. Image picot determined by origin 
-            .setOrigin(0, 0);
+            .setOrigin(0, 0);*/
+             
 
         player = this.physics.add.sprite(game.config.width / 2, game.config.height / 2, 'dude')
             .setDisplaySize(game.config.height / 14.2, game.config.height / 10)
             .setInteractive()
             .setCollideWorldBounds(true)
+            .setDepth(1)
             .setBounce(0.2);
 
         ground = this.physics.add.group();
@@ -25,6 +27,8 @@ class Level1 extends Phaser.Scene {
         singleBomb = this.physics.add.group();
 
         bombs = this.physics.add.group();
+
+        this.makeSky();   
 
         this.makeGround();
 
@@ -72,7 +76,7 @@ class Level1 extends Phaser.Scene {
         cursors = this.input.keyboard.createCursorKeys();
 
         //alternate keys added for controls
-        controls = this.input.keyboard.addKeys('W,S,A,D');
+        controls = this.input.keyboard.addKeys('W,S,A,D,P');
 
         this.physics.add.overlap(player, bombs, this.destroyBomb, null, this);
         this.physics.add.overlap(player, singleBomb, this.destroySingleBomb, null, this);
@@ -81,8 +85,9 @@ class Level1 extends Phaser.Scene {
 
     update() {
         if (!gameOver) {
-            sky.tilePositionY -= 0.5;
+            //sky.tilePositionY -= 0.5;
             this.updateControls();
+            this.resetSky();
             this.resetGround();
             this.resetBomb();
             this.resetSingleBomb();
@@ -168,9 +173,54 @@ class Level1 extends Phaser.Scene {
             player.anims.play('turn', true);
         }
 
+        if(controls.P.isDown){
+            this.physics.pause();
+            
+        }else {
+            this.physics.resume();
+            
+        }
+
         if (cursors.up.isDown && player.body.touching.down || controls.W.isDown && player.body.touching.down || jump && player.body.touching.down) {
             player.setVelocityY(-800);
         }
+    }
+
+    makeSky() {
+        skyWall = this.physics.add.group({
+            key: 'sky',
+            repeat: 6,
+            collideWorldBounds: true,
+            setXY: {
+                //x: game.config.width / 4,
+                //y: 0,
+                //stepX: game.config.width / 4,
+                stepY: game.config.height / 5,
+            },
+        });
+
+        skyWall.children.iterate(function(child) {
+            child
+                .setDisplaySize(game.config.width, 280)
+                .setDepth(0)
+                .setOrigin(1)
+                .setImmovable(true)
+                .setVelocityY(50);
+
+            child.body.setAllowGravity(false);
+        });
+
+        //this.physics.add.collider(player, ground);
+    }
+
+    resetSky(sky) {
+        skyWall.children.iterate(function(child) {
+            if (child.y > game.config.height + 280) {
+                child.y = -240;
+                //var respawnX = Phaser.Math.Between(0, game.config.width);
+                //ground.x = respawnX;
+            }
+        });
     }
 
     makeGround() {

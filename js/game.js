@@ -35,6 +35,7 @@ var config = {
 var message = [];
 var instructions = [];
 var sky;
+var skyWall;
 var player;
 var playerY;
 var jump = false;
