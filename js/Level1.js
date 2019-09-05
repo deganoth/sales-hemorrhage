@@ -173,7 +173,7 @@ class Level1 extends Phaser.Scene {
             player.anims.play('turn', true);
         }
 
-        if(controls.P.isDown.once){
+        if(controls.P.isDown){
             this.physics.pause();
 
         }
