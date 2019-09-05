@@ -58,6 +58,8 @@ var health;
 var bombs;
 var singleBomb;
 var cursors;
+var pauseCount = 0;
+var newPause;
 var controls;
 var gameOver = false;
 var gameWin = false;

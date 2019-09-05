@@ -76,7 +76,7 @@ class Level1 extends Phaser.Scene {
         cursors = this.input.keyboard.createCursorKeys();
 
         //alternate keys added for controls
-        controls = this.input.keyboard.addKeys('W,S,A,D,P');
+        controls = this.input.keyboard.addKeys('W,S,A,D,P,O');
 
         this.physics.add.overlap(player, bombs, this.destroyBomb, null, this);
         this.physics.add.overlap(player, singleBomb, this.destroySingleBomb, null, this);
@@ -173,10 +173,12 @@ class Level1 extends Phaser.Scene {
             player.anims.play('turn', true);
         }
 
-        if(controls.P.isDown){
+        if(controls.P.isDown.once){
             this.physics.pause();
-            
-        }else {
+
+        }
+
+        if(controls.O.isDown){
             this.physics.resume();
             
         }
