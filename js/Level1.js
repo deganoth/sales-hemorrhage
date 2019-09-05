@@ -181,7 +181,7 @@ class Level1 extends Phaser.Scene {
             setXY: {
                 x: game.config.width / 4,
                 y: game.config.height / 4,
-                stepX: game.config.width / 5,
+                stepX: game.config.width / 4,
                 stepY: game.config.height / 3,
             },
         });
