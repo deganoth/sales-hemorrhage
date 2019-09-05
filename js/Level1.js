@@ -32,7 +32,7 @@ class Level1 extends Phaser.Scene {
 
         this.makeHud();
 
-        this.makeControls();
+        this.makeMobileControls();
 
         this.anims.create({
             key: "bomb_anim",
@@ -91,7 +91,7 @@ class Level1 extends Phaser.Scene {
         }
     }
 
-    makeControls() {
+    makeMobileControls() {
         if (this.sys.game.device.input.touch) {
 
             hudBox = this.add.image(0, game.config.height / 1.18, 'soul')
