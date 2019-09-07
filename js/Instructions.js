@@ -14,13 +14,14 @@ class Instructions extends Phaser.Scene {
         this.load.image("sky", "assets/images/sky2.png");
         this.load.image("soul", "assets/images/soul_bar.png");
         this.load.image("sales", "assets/images/sales_bar.png");
-        this.load.spritesheet("bomb", "assets/images/bomb.png", {
-            frameWidth: 14,
-            frameHeight: 14
+        this.load.spritesheet("bum", "assets/new_images/bum-customer.png",{
+            frameWidth: 66.5,
+            frameHeight: 100
         });
-        this.load.spritesheet("bomb_2", "assets/images/bomb_2.png", {
-            frameWidth: 14,
-            frameHeight: 14
+        
+        this.load.spritesheet("fatcat", "assets/new_images/fatcat.png", {
+            frameWidth: 66.5,
+            frameHeight: 100
         });
         this.load.spritesheet("bomb_3", "assets/images/bomb_3.png", {
             frameWidth: 14,

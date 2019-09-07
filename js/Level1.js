@@ -19,19 +19,47 @@ class Level1 extends Phaser.Scene {
 
         health = this.physics.add.group();
 
-        singleBomb = this.physics.add.group();
+        richCustomer = this.physics.add.group();
 
-        bombs = this.physics.add.group();
+        cheapCustomer = this.physics.add.group();
 
         this.makeSky();   
 
         this.makeGround();
 
-        this.makeBombs();
+        this.makeCheapCustomer();
 
         this.makeHud();
 
         this.makeMobileControls();
+
+        this.makeAnimations();
+
+        cursors = this.input.keyboard.createCursorKeys();
+
+        //alternate keys added for controls
+        controls = this.input.keyboard.addKeys('W,S,A,D,P,O');
+
+        this.physics.add.overlap(player, cheapCustomer, this.destroyCheapCustomer, null, this);
+        this.physics.add.collider(player, ground);
+    }
+
+    update() {
+        if (!gameOver) {
+            //graphics.clear();
+            this.updateControls();
+            this.resetSky();
+            this.resetGround();
+            this.resetCheapCustomer();
+            this.resetRichCustomer();
+            this.soulBarText();
+            this.gameEnd();
+        }
+    }
+
+    makeAnimations(){
+
+        //player animations
 
         this.anims.create({
             key: "bomb_anim",
@@ -68,27 +96,47 @@ class Level1 extends Phaser.Scene {
             repeat: -1
         });
 
-        cursors = this.input.keyboard.createCursorKeys();
+        //cheap customer animations
+         this.anims.create({
+            key: 'left_customer',
+            frames: this.anims.generateFrameNumbers('bum', { start: 0, end: 3 }),
+            frameRate: 10,
+            repeat: -1
+        });
 
-        //alternate keys added for controls
-        controls = this.input.keyboard.addKeys('W,S,A,D,P,O');
+        this.anims.create({
+            key: 'turn_customer',
+            frames: [{ key: 'bum', frame: 4 }],
+            frameRate: 20
+        });
 
-        this.physics.add.overlap(player, bombs, this.destroyBomb, null, this);
-        this.physics.add.overlap(player, singleBomb, this.destroySingleBomb, null, this);
-        //this.physics.add.collider(player, ground);
-    }
+        this.anims.create({
+            key: 'right_customer',
+            frames: this.anims.generateFrameNumbers('bum', { start: 5, end: 8 }),
+            frameRate: 10,
+            repeat: -1
+        });
 
-    update() {
-        if (!gameOver) {
-            //graphics.clear();
-            this.updateControls();
-            this.resetSky();
-            this.resetGround();
-            this.resetBomb();
-            this.resetSingleBomb();
-            this.soulBarText();
-            this.gameEnd();
-        }
+        //rich customer animations
+        this.anims.create({
+            key: 'left_customer_rich',
+            frames: this.anims.generateFrameNumbers('fatcat', { start: 0, end: 3 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'turn_customer_rich',
+            frames: [{ key: 'fatcat', frame: 4 }],
+            frameRate: 20
+        });
+
+        this.anims.create({
+            key: 'right_customer_rich',
+            frames: this.anims.generateFrameNumbers('fatcat', { start: 5, end: 8 }),
+            frameRate: 10,
+            repeat: -1
+        });
     }
 
     makeMobileControls() {
@@ -170,7 +218,6 @@ class Level1 extends Phaser.Scene {
 
         if(controls.P.isDown){
             this.physics.pause();
-
         }
 
         if(controls.O.isDown){
@@ -180,6 +227,30 @@ class Level1 extends Phaser.Scene {
         if (cursors.up.isDown && player.body.touching.down || controls.W.isDown && player.body.touching.down || jump && player.body.touching.down) {
             player.setVelocityY(-800);
         }
+
+        this.cheapCustomerAnimations();
+        this.richCustomerAnimations();
+    }
+
+    cheapCustomerAnimations(){
+        cheapCustomer.children.iterate(function(child) {
+                if(child.body.touching.down){
+                    child.setVelocityY(0)
+                         .setVelocityX(200)
+                         .anims.play('right_customer', true);
+                }
+            });
+    }
+
+    richCustomerAnimations(){
+        richCustomer.children.iterate(function(child) {
+                if(child.body.touching.down){
+                    child.setVelocityY(0)
+                         .setVelocityX(-200)
+                         .anims.play('left_customer_rich', true);
+                }
+                
+            });
     }
 
     makeSky() {
@@ -270,7 +341,7 @@ class Level1 extends Phaser.Scene {
         });
 
         this.physics.add.collider(health, ground);
-        this.physics.add.collider(health, bombs);
+        this.physics.add.collider(health, cheapCustomer);
         this.physics.add.overlap(player, health, this.addHealth, null, this);
 
         if (soulValue <= 350) {
@@ -293,7 +364,7 @@ class Level1 extends Phaser.Scene {
             });
 
             this.physics.add.collider(health, ground);
-            this.physics.add.collider(health, bombs);
+            //this.physics.add.collider(health, cheapCustomer);
             this.physics.add.overlap(player, health, this.addHealth, null, this);
         }
     }
@@ -308,32 +379,34 @@ class Level1 extends Phaser.Scene {
         bomb_3.disableBody(true, true);
     }
 
-    makeSingleBomb() {
-        singleBomb = this.physics.add.group({
-            key: 'bomb_2',
+    makeRichCustomer() {
+        richCustomer = this.physics.add.group({
+            key: 'fatcat',
             repeat: 0,
             collideWorldBounds: true
         });
 
-        singleBomb.children.iterate(function(child) {
+        richCustomer.children.iterate(function(child) {
             child
-                .setCircle(6, 1, 1)
+                .setDisplaySize(game.config.height / 14.2, game.config.height / 10)
+                .setSize(25, 80)
+                .setOffset(18, 20)
+                .setCollideWorldBounds(true)
                 .setVelocity(Phaser.Math.Between(-300, -100), 20)
-                .setScale(Phaser.Math.Between(3, 4))
                 .setRandomPosition(Phaser.Math.Between(10, 200), 0, game.config.width, game.config.height)
                 .setInteractive()
                 .setBounce(0.5);
             child.y = -100;
         });
 
-        this.physics.add.collider(singleBomb, ground);
-        this.physics.add.collider(singleBomb, bombs);
-        this.physics.add.overlap(player, singleBomb, this.destroySingleBomb, null, this);
+        this.physics.add.collider(richCustomer, ground);
+        //this.physics.add.collider(richCustomer, cheapCustomer);
+        this.physics.add.overlap(player, richCustomer, this.destroyRichCustomer, null, this);
 
     }
 
-    resetSingleBomb(bomb_2) {
-        singleBomb.children.iterate(function(child) {
+    resetRichCustomer(fatcat) {
+        richCustomer.children.iterate(function(child) {
             if (child.y > game.config.height) {
                 child.y = -100;
                 var respawnX = Phaser.Math.Between(0, game.config.width);
@@ -342,7 +415,7 @@ class Level1 extends Phaser.Scene {
         });
     }
 
-    destroySingleBomb(player, bomb_2) {
+    destroyRichCustomer(player, fatcat) {
 
         sales += 100;
         salesBar.setText('sales:$' + sales);
@@ -351,9 +424,9 @@ class Level1 extends Phaser.Scene {
         soulBarBackground.setDisplaySize((game.config.width / 1.06) + soul, game.config.width / 12)
 
 
-        bomb_2.disableBody(true, true);
-        if (singleBomb.countActive(true) === 0) {
-            singleBomb.children.iterate(function(child) {
+        fatcat.disableBody(true, true);
+        if (richCustomer.countActive(true) === 0) {
+            richCustomer.children.iterate(function(child) {
                 child.enableBody(true, child.x, 0, true, true)
                     .setVelocity(Phaser.Math.Between(-200, 200), 20)
                     .setRandomPosition(Phaser.Math.Between(game.config.width / 10, game.config.width / 5), 0, game.config.width, game.config.height);
@@ -362,31 +435,33 @@ class Level1 extends Phaser.Scene {
         }
     }
 
-    makeBombs() {
-        bombs = this.physics.add.group({
-            key: 'bomb',
+    makeCheapCustomer() {
+        cheapCustomer = this.physics.add.group({
+            key: 'bum',
             repeat: 7,
             collideWorldBounds: true
         });
 
-        bombs.children.iterate(function(child) {
+        cheapCustomer.children.iterate(function(child) {
             child
-                .setCircle(6, 1, 1)
+                .setDisplaySize(game.config.height / 14.2, game.config.height / 10)
+                .setSize(25, 80)
+                .setOffset(18, 20)
+                .setCollideWorldBounds(true)
                 .setVelocity(Phaser.Math.Between(-200, 200), 20)
-                .setScale(Phaser.Math.Between(3, 4))
                 .setRandomPosition(Phaser.Math.Between(game.config.width / 10, game.config.width / 5), 0, game.config.width, game.config.height)
                 .setBounce(0.5)
                 .setInteractive();
             child.y = -100;
         });
 
-        this.physics.add.collider(bombs, ground);
+        this.physics.add.collider(cheapCustomer, ground);
 
     }
 
-    //resets the position of each bomb in the group
-    resetBomb(bomb) {
-        bombs.children.iterate(function(child) {
+    //resets the position of each cheap customer in the group
+    resetCheapCustomer(bum) {
+        cheapCustomer.children.iterate(function(child) {
             if (child.y > game.config.height) {
                 child.y = -100;
                 var respawnX = Phaser.Math.Between(0, game.config.width);
@@ -395,8 +470,8 @@ class Level1 extends Phaser.Scene {
         });
     }
 
-    destroyBomb(player, bomb) {
-        this.makeSingleBomb();
+    destroyCheapCustomer(player, bum) {
+        this.makeRichCustomer();
 
         sales += 50;
         salesBar.setText('sales:$' + sales);
@@ -404,9 +479,9 @@ class Level1 extends Phaser.Scene {
         soul -= 5;
         soulBarBackground.setDisplaySize((game.config.width / 1.06) + soul, game.config.width / 12);
 
-        bomb.disableBody(true, true);
-        if (bombs.countActive(true) === 0) {
-            bombs.children.iterate(function(child) {
+        bum.disableBody(true, true);
+        if (cheapCustomer.countActive(true) === 0) {
+            cheapCustomer.children.iterate(function(child) {
                 child.enableBody(true, child.x, 0, true, true)
                     .setVelocity(Phaser.Math.Between(-200, 200), 20)
                     .setRandomPosition(Phaser.Math.Between(game.config.width / 10, game.config.width / 5), 0, game.config.width, game.config.height);
