@@ -6,19 +6,14 @@ class Level1 extends Phaser.Scene {
 
     }
     create() {
-
-        /*sky = this.add.tileSprite(0, 0, game.config.width, game.config.height, "sky")
-            .setDisplaySize(game.config.width, game.config.height)
-            //userful for setting offset or pivot at top left of screen. Image picot determined by origin 
-            .setOrigin(0, 0);*/
-             
-
         player = this.physics.add.sprite(game.config.width / 2, game.config.height / 2, 'dude')
             .setDisplaySize(game.config.height / 14.2, game.config.height / 10)
+            .setSize(25, 80)
+            .setOffset(18, 20)
             .setInteractive()
             .setCollideWorldBounds(true)
             .setDepth(1)
-            .setBounce(0.2);
+            .setBounce(0.2)
 
         ground = this.physics.add.group();
 
@@ -85,7 +80,7 @@ class Level1 extends Phaser.Scene {
 
     update() {
         if (!gameOver) {
-            //sky.tilePositionY -= 0.5;
+            //graphics.clear();
             this.updateControls();
             this.resetSky();
             this.resetGround();
@@ -179,8 +174,7 @@ class Level1 extends Phaser.Scene {
         }
 
         if(controls.O.isDown){
-            this.physics.resume();
-            
+            this.physics.resume(); 
         }
 
         if (cursors.up.isDown && player.body.touching.down || controls.W.isDown && player.body.touching.down || jump && player.body.touching.down) {
@@ -211,16 +205,12 @@ class Level1 extends Phaser.Scene {
 
             child.body.setAllowGravity(false);
         });
-
-        //this.physics.add.collider(player, ground);
     }
 
     resetSky(sky) {
         skyWall.children.iterate(function(child) {
             if (child.y > game.config.height + 280) {
                 child.y = -240;
-                //var respawnX = Phaser.Math.Between(0, game.config.width);
-                //ground.x = respawnX;
             }
         });
     }
@@ -240,10 +230,9 @@ class Level1 extends Phaser.Scene {
 
         ground.children.iterate(function(child) {
             child
-                //.setX(Phaser.Math.Between(30, 50))
+                
                 .setDisplaySize(game.config.width / 1.5, game.config.height / 20)
                 .setDepth(1)
-                //.setOrigin(0)
                 .setImmovable(true)
                 .setVelocityY(100);
 
@@ -257,8 +246,6 @@ class Level1 extends Phaser.Scene {
         ground.children.iterate(function(child) {
             if (child.y > game.config.height) {
                 child.y = 0;
-                //var respawnX = Phaser.Math.Between(0, game.config.width);
-                //ground.x = respawnX;
             }
         });
     }
@@ -268,21 +255,22 @@ class Level1 extends Phaser.Scene {
             key: 'bomb_3',
             repeat: 0,
             collideWorldBounds: true
-
         });
 
         health.children.iterate(function(child) {
             child
+                .setCircle(6, 1, 1)
                 .setGravityY(-500)
-                .setVelocity(Phaser.Math.Between(-200, -100), 20)
+                .setVelocity(Phaser.Math.Between(-200, -100), 10)
                 .setScale(Phaser.Math.Between(3, 4))
                 .setRandomPosition(Phaser.Math.Between(game.config.width / 10, game.config.width / 5), 0, game.config.width, game.config.height)
-                .setBounce(0.8)
+                .setBounce(0.2)
                 .setInteractive();
             child.y = -100;
         });
 
         this.physics.add.collider(health, ground);
+        this.physics.add.collider(health, bombs);
         this.physics.add.overlap(player, health, this.addHealth, null, this);
 
         if (soulValue <= 350) {
@@ -294,16 +282,18 @@ class Level1 extends Phaser.Scene {
 
             health.children.iterate(function(child) {
                 child
+                    .setCircle(6, 1, 1)
                     .setGravityY(-500)
                     .setVelocity(Phaser.Math.Between(-200, -100), 20)
                     .setScale(Phaser.Math.Between(3, 4))
                     .setRandomPosition(Phaser.Math.Between(game.config.width / 10, game.config.width / 5), 0, game.config.width, game.config.height)
-                    .setBounce(0.8)
+                    .setBounce(0.2)
                     .setInteractive();
                 child.y = -100;
             });
 
             this.physics.add.collider(health, ground);
+            this.physics.add.collider(health, bombs);
             this.physics.add.overlap(player, health, this.addHealth, null, this);
         }
     }
@@ -327,7 +317,8 @@ class Level1 extends Phaser.Scene {
 
         singleBomb.children.iterate(function(child) {
             child
-                .setVelocity(Phaser.Math.Between(-200, -100), 20)
+                .setCircle(6, 1, 1)
+                .setVelocity(Phaser.Math.Between(-300, -100), 20)
                 .setScale(Phaser.Math.Between(3, 4))
                 .setRandomPosition(Phaser.Math.Between(10, 200), 0, game.config.width, game.config.height)
                 .setInteractive()
@@ -336,6 +327,7 @@ class Level1 extends Phaser.Scene {
         });
 
         this.physics.add.collider(singleBomb, ground);
+        this.physics.add.collider(singleBomb, bombs);
         this.physics.add.overlap(player, singleBomb, this.destroySingleBomb, null, this);
 
     }
@@ -379,6 +371,7 @@ class Level1 extends Phaser.Scene {
 
         bombs.children.iterate(function(child) {
             child
+                .setCircle(6, 1, 1)
                 .setVelocity(Phaser.Math.Between(-200, 200), 20)
                 .setScale(Phaser.Math.Between(3, 4))
                 .setRandomPosition(Phaser.Math.Between(game.config.width / 10, game.config.width / 5), 0, game.config.width, game.config.height)

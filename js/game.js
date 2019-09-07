@@ -32,6 +32,7 @@ var config = {
     },
     scene: [Instructions, Level1]
 };
+var graphics;
 var message = [];
 var instructions = [];
 var sky;

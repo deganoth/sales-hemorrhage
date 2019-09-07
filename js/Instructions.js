@@ -30,9 +30,9 @@ class Instructions extends Phaser.Scene {
             frameWidth: 24,
             frameHeight: 22
         });
-        this.load.spritesheet("dude", "assets/images/dude.png", {
-            frameWidth: 32,
-            frameHeight: 48
+        this.load.spritesheet("dude", "assets/new_images/topgun3.png", {
+            frameWidth: 66.5,
+            frameHeight: 100
         });
         this.load.spritesheet("explode", "assets/images/explosion2.png", {
             frameWidth: 48,
