@@ -29,6 +29,8 @@ class Level1 extends Phaser.Scene {
 
         this.makeCheapCustomer();
 
+        this.makeRichCustomer();
+
         this.makeHud();
 
         this.makeMobileControls();
@@ -41,13 +43,15 @@ class Level1 extends Phaser.Scene {
         controls = this.input.keyboard.addKeys('W,S,A,D,P,O');
 
         this.physics.add.overlap(player, cheapCustomer, this.destroyCheapCustomer, null, this);
+        this.physics.add.overlap(player, richCustomer, this.destroyRichCustomer, null, this);
         this.physics.add.collider(player, ground);
     }
 
     update() {
         if (!gameOver) {
-            //graphics.clear();
             this.updateControls();
+            this.updateControlsCheapCustomer();
+            this.updateControlsRichCustomer();
             this.resetSky();
             this.resetGround();
             this.resetCheapCustomer();
@@ -59,15 +63,15 @@ class Level1 extends Phaser.Scene {
 
     makeAnimations(){
 
-        //player animations
-
-        this.anims.create({
-            key: "bomb_anim",
-            frames: this.anims.generateFrameNumbers("bomb"),
+        //health animations
+         this.anims.create({
+            key: "energy_anim",
+            frames: this.anims.generateFrameNumbers("energy", { start: 0, end: 3}),
             frameRate: 15,
             repeat: -1,
         });
 
+        //player animations
         this.anims.create({
             key: "explode_anim",
             frames: this.anims.generateFrameNumbers("explode"),
@@ -206,10 +210,12 @@ class Level1 extends Phaser.Scene {
         if (cursors.left.isDown || controls.A.isDown || left) {
             player.setVelocityX(-500);
             player.anims.play('left', true);
+            
         }
         else if (cursors.right.isDown || controls.D.isDown || right) {
             player.setVelocityX(500);
             player.anims.play('right', true);
+            
         }
         else {
             player.setVelocityX(0);
@@ -227,29 +233,31 @@ class Level1 extends Phaser.Scene {
         if (cursors.up.isDown && player.body.touching.down || controls.W.isDown && player.body.touching.down || jump && player.body.touching.down) {
             player.setVelocityY(-800);
         }
-
-        this.cheapCustomerAnimations();
-        this.richCustomerAnimations();
     }
 
-    cheapCustomerAnimations(){
+    updateControlsCheapCustomer(bum){
         cheapCustomer.children.iterate(function(child) {
-                if(child.body.touching.down){
-                    child.setVelocityY(0)
-                         .setVelocityX(200)
-                         .anims.play('right_customer', true);
+                if(child.body.touching.down && cursors.left.isDown || child.body.touching.down && controls.A.isDown || child.body.touching.down && left){
+                    child.setVelocityX(200);
+                    child.anims.play('right_customer', true);
+                }
+                else if(child.body.touching.down && cursors.right.isDown || child.body.touching.down && controls.D.isDown || child.body.touching.down && right){
+                    child.setVelocityX(-200);
+                    child.anims.play('left_customer', true);
                 }
             });
     }
 
-    richCustomerAnimations(){
+    updateControlsRichCustomer(){
         richCustomer.children.iterate(function(child) {
-                if(child.body.touching.down){
-                    child.setVelocityY(0)
-                         .setVelocityX(-200)
-                         .anims.play('left_customer_rich', true);
+                if(child.body.touching.down && cursors.left.isDown || child.body.touching.down && controls.A.isDown || child.body.touching.down && left){
+                    child.setVelocityX(400);
+                    child.anims.play('right_customer_rich', true);
                 }
-                
+                else if(child.body.touching.down && cursors.right.isDown || child.body.touching.down && controls.D.isDown || child.body.touching.down && right){
+                    child.setVelocityX(-400);
+                    child.anims.play('left_customer_rich', true);
+                }
             });
     }
 
@@ -301,12 +309,10 @@ class Level1 extends Phaser.Scene {
 
         ground.children.iterate(function(child) {
             child
-                
                 .setDisplaySize(game.config.width / 1.5, game.config.height / 20)
                 .setDepth(1)
                 .setImmovable(true)
                 .setVelocityY(100);
-
             child.body.setAllowGravity(false);
         });
 
@@ -321,68 +327,73 @@ class Level1 extends Phaser.Scene {
         });
     }
 
-    makeHealth() {
+    makeEnergy() {
         health = this.physics.add.group({
-            key: 'bomb_3',
+            key: 'energy',
             repeat: 0,
             collideWorldBounds: true
         });
 
         health.children.iterate(function(child) {
             child
-                .setCircle(6, 1, 1)
+                .setDisplaySize(game.config.height / 14.2, game.config.height / 10)
+                .setSize(30, 60)
+                .setOffset(18, 20)
                 .setGravityY(-500)
                 .setVelocity(Phaser.Math.Between(-200, -100), 10)
-                .setScale(Phaser.Math.Between(3, 4))
+                //.setScale(Phaser.Math.Between(3, 4))
                 .setRandomPosition(Phaser.Math.Between(game.config.width / 10, game.config.width / 5), 0, game.config.width, game.config.height)
-                .setBounce(0.2)
+                .setBounce(0.5)
                 .setInteractive();
             child.y = -100;
+            child.anims.play('energy_anim', true);
         });
 
         this.physics.add.collider(health, ground);
         this.physics.add.collider(health, cheapCustomer);
-        this.physics.add.overlap(player, health, this.addHealth, null, this);
+        this.physics.add.overlap(player, health, this.addEnergy, null, this);
 
         if (soulValue <= 350) {
             health = this.physics.add.group({
-                key: 'bomb_3',
+                key: 'energy',
                 repeat: 3,
                 collideWorldBounds: true
             });
 
             health.children.iterate(function(child) {
                 child
-                    .setCircle(6, 1, 1)
+                    .setDisplaySize(game.config.height / 14.2, game.config.height / 10)
+                    .setSize(25, 80)
+                    .setOffset(18, 20)
                     .setGravityY(-500)
                     .setVelocity(Phaser.Math.Between(-200, -100), 20)
-                    .setScale(Phaser.Math.Between(3, 4))
+                    //.setScale(Phaser.Math.Between(3, 4))
                     .setRandomPosition(Phaser.Math.Between(game.config.width / 10, game.config.width / 5), 0, game.config.width, game.config.height)
-                    .setBounce(0.2)
+                    .setBounce(0.5)
                     .setInteractive();
                 child.y = -100;
             });
 
             this.physics.add.collider(health, ground);
-            //this.physics.add.collider(health, cheapCustomer);
-            this.physics.add.overlap(player, health, this.addHealth, null, this);
+            this.physics.add.collider(health, cheapCustomer);
+            this.physics.add.overlap(player, health, this.addEnergy, null, this);
         }
     }
 
-    addHealth(player, bomb_3) {
+    addEnergy(player, energy) {
         sales -= 50;
         salesBar.setText('sales:$' + sales);
 
         soul += 100;
         soulBarBackground.setDisplaySize((game.config.width / 1.06) + soul, game.config.width / 12)
 
-        bomb_3.disableBody(true, true);
+        energy.disableBody(true, true);
     }
 
     makeRichCustomer() {
         richCustomer = this.physics.add.group({
             key: 'fatcat',
-            repeat: 0,
+            repeat: Phaser.Math.Between(0, 3),
             collideWorldBounds: true
         });
 
@@ -395,13 +406,15 @@ class Level1 extends Phaser.Scene {
                 .setVelocity(Phaser.Math.Between(-300, -100), 20)
                 .setRandomPosition(Phaser.Math.Between(10, 200), 0, game.config.width, game.config.height)
                 .setInteractive()
-                .setBounce(0.5);
+                .setBounce(0.2);
             child.y = -100;
         });
 
         this.physics.add.collider(richCustomer, ground);
-        //this.physics.add.collider(richCustomer, cheapCustomer);
+        this.physics.add.collider(richCustomer, cheapCustomer);
+        //this.physics.add.collider(richCustomer, player);
         this.physics.add.overlap(player, richCustomer, this.destroyRichCustomer, null, this);
+        
 
     }
 
@@ -417,10 +430,10 @@ class Level1 extends Phaser.Scene {
 
     destroyRichCustomer(player, fatcat) {
 
-        sales += 100;
+        sales += bigSale;
         salesBar.setText('sales:$' + sales);
 
-        soul -= 25;
+        soul -= bigValue;
         soulBarBackground.setDisplaySize((game.config.width / 1.06) + soul, game.config.width / 12)
 
 
@@ -450,7 +463,7 @@ class Level1 extends Phaser.Scene {
                 .setCollideWorldBounds(true)
                 .setVelocity(Phaser.Math.Between(-200, 200), 20)
                 .setRandomPosition(Phaser.Math.Between(game.config.width / 10, game.config.width / 5), 0, game.config.width, game.config.height)
-                .setBounce(0.5)
+                .setBounce(0.2)
                 .setInteractive();
             child.y = -100;
         });
@@ -468,15 +481,15 @@ class Level1 extends Phaser.Scene {
                 child.x = respawnX;
             }
         });
+
     }
 
     destroyCheapCustomer(player, bum) {
-        this.makeRichCustomer();
 
-        sales += 50;
+        sales += regularSale;
         salesBar.setText('sales:$' + sales);
 
-        soul -= 5;
+        soul -= smallValue;
         soulBarBackground.setDisplaySize((game.config.width / 1.06) + soul, game.config.width / 12);
 
         bum.disableBody(true, true);
@@ -487,7 +500,8 @@ class Level1 extends Phaser.Scene {
                     .setRandomPosition(Phaser.Math.Between(game.config.width / 10, game.config.width / 5), 0, game.config.width, game.config.height);
                 child.y = -100;
             });
-            this.makeHealth();
+            this.makeEnergy();
+
         }
     }
 
@@ -502,7 +516,7 @@ class Level1 extends Phaser.Scene {
 
         this.physics.add.collider(player, hudBox);
 
-        soulBar = this.add.text(20, 0, 'soul:')
+        energyBar = this.add.text(20, 0, 'soul:')
             .setDepth(2)
             .setStyle({
                 fontSize: game.config.width / 12,
@@ -529,19 +543,19 @@ class Level1 extends Phaser.Scene {
     soulBarText() {
 
         if (soul >= 0) {
-            soulBar.setText('soul:' + 'healthy');
+            energyBar.setText('energy:' + 'very good');
         }
         else if (soul >= -187.5) {
-            soulBar.setText('soul:' + 'not bad');
+            energyBar.setText('energy:' + 'okay');
         }
         else if (soul >= -375) {
-            soulBar.setText('soul:' + 'worse');
+            energyBar.setText('energy:' + 'worse');
         }
         else if (soul >= -562.5) {
-            soulBar.setText('soul:' + 'much worse');
+            energyBar.setText('energy:' + 'much worse');
         }
         else if (soul >= -680) {
-            soulBar.setText('soul:' + 'doomed');
+            energyBar.setText('energy:' + 'terrible');
 
         }
     }
@@ -636,7 +650,7 @@ class Level1 extends Phaser.Scene {
                 "You reached your target",
                 "Your Soul however,",
                 "did",
-                soulBar.text,
+                energyBar.text,
                 "..."
             ];
 

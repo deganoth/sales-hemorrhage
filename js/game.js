@@ -30,8 +30,11 @@ var config = {
     input: {
         activePointers: 5,
     },
-    scene: [Instructions, Level1]
+    scene: [Title, Controls, Level1]
 };
+var title;
+var desktopControls;
+var mobileControls;
 var graphics;
 var message = [];
 var instructions = [];
@@ -45,16 +48,19 @@ var right = false;
 var j;
 var l;
 var r;
-var soulBar;
+var energyBar;
 var soulBall;
 var ground;
 var hudBox;
 var soulValue;
-var salesBar;
-var salesArray;
 var soul = 0;
+var smallValue = 5;
+var bigValue = 25;
 var soulBarBackground;
 var sales = 0;
+var salesBar;
+var regularSale = 50;
+var bigSale = 300;
 var health;
 var cheapCustomer;
 var richCustomer;
