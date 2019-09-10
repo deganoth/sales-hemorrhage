@@ -9,7 +9,7 @@ class Level1 extends Phaser.Scene {
 
 
 
-        player = this.physics.add.sprite(game.config.width / 2, game.config.height / 2, 'dude')
+        player = this.physics.add.sprite(game.config.width / 1.6, game.config.height / 2.8, 'dude')
             .setDisplaySize(game.config.height / 14.2, game.config.height / 10)
             .setSize(25, 80)
             .setOffset(18, 20)
