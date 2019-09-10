@@ -8,6 +8,7 @@ class Title extends Phaser.Scene {
     preload() {
         this.load.bitmapFont('titleFont', 'assets/fonts/BALLSONTHERAMPAGE.png', 'assets/fonts/BALLSONTHERAMPAGE.fnt');
         this.load.bitmapFont('subTitle', 'assets/fonts/digital-7.png', 'assets/fonts/digital-7.fnt');
+        this.load.bitmapFont('energyBarFont', 'assets/fonts/digital-7-white.png', 'assets/fonts/digital-7-white.fnt');
         this.load.image('leftarrow', 'assets/images/left_arrow.png');
         this.load.image('rightarrow', 'assets/images/right_arrow.png');
         this.load.image('uparrow', 'assets/images/up_arrow.png');
@@ -18,6 +19,7 @@ class Title extends Phaser.Scene {
         this.load.image("sky", "assets/images/sky2.png");
         this.load.image("soul", "assets/images/soul_bar.png");
         this.load.image("sales", "assets/images/sales_bar.png");
+        this.load.image("stairs", "assets/new_images/stairs.png");
         this.load.spritesheet("bum", "assets/new_images/bum-customer.png",{
             frameWidth: 66.5,
             frameHeight: 100

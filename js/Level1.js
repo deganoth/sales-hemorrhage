@@ -6,6 +6,9 @@ class Level1 extends Phaser.Scene {
 
     }
     create() {
+
+
+
         player = this.physics.add.sprite(game.config.width / 2, game.config.height / 2, 'dude')
             .setDisplaySize(game.config.height / 14.2, game.config.height / 10)
             .setSize(25, 80)
@@ -45,6 +48,7 @@ class Level1 extends Phaser.Scene {
         this.physics.add.overlap(player, cheapCustomer, this.destroyCheapCustomer, null, this);
         this.physics.add.overlap(player, richCustomer, this.destroyRichCustomer, null, this);
         this.physics.add.collider(player, ground);
+        this.physics.add.collider(cheapCustomer, cheapCustomer);
     }
 
     update() {
@@ -58,6 +62,7 @@ class Level1 extends Phaser.Scene {
             this.resetRichCustomer();
             this.soulBarText();
             this.gameEnd();
+            
         }
     }
 
@@ -245,6 +250,10 @@ class Level1 extends Phaser.Scene {
                     child.setVelocityX(-200);
                     child.anims.play('left_customer', true);
                 }
+
+                if (cursors.up.isDown && child.body.touching.down || controls.W.isDown && child.body.touching.down || jump && child.body.touching.down) {
+                    child.setVelocityY(-300);
+                }
             });
     }
 
@@ -258,27 +267,29 @@ class Level1 extends Phaser.Scene {
                     child.setVelocityX(-400);
                     child.anims.play('left_customer_rich', true);
                 }
+
+                if (cursors.up.isDown && child.body.touching.down || controls.W.isDown && child.body.touching.down || jump && child.body.touching.down) {
+                    child.setVelocityY(-200);
+                }
             });
     }
 
     makeSky() {
         skyWall = this.physics.add.group({
             key: 'sky',
-            repeat: 6,
+            repeat: 4,
             collideWorldBounds: true,
             setXY: {
-                //x: game.config.width / 4,
-                //y: 0,
-                //stepX: game.config.width / 4,
-                stepY: game.config.height / 5,
+                y: -(game.config.height / 3),
+                stepY: game.config.height / 3,
             },
         });
 
         skyWall.children.iterate(function(child) {
             child
-                .setDisplaySize(game.config.width, 280)
+                .setDisplaySize(game.config.width, game.config.height / 3)
                 .setDepth(0)
-                .setOrigin(1)
+                //.setOrigin(1)
                 .setImmovable(true)
                 .setVelocityY(50);
 
@@ -288,28 +299,30 @@ class Level1 extends Phaser.Scene {
 
     resetSky(sky) {
         skyWall.children.iterate(function(child) {
-            if (child.y > game.config.height + 280) {
-                child.y = -240;
+            if (child.y > game.config.height + (game.config.height / 3)) {
+                child.y = -(game.config.height / 3);
             }
         });
     }
 
     makeGround() {
         ground = this.physics.add.group({
-            key: 'sales',
-            repeat: 2,
+            key: 'stairs',
+            repeat: 4,
             collideWorldBounds: true,
             setXY: {
                 x: game.config.width / 4,
-                y: game.config.height / 4,
-                stepX: game.config.width / 4,
+                y: -(game.config.height / 3),
+                stepX: game.config.width / 8.5,
                 stepY: game.config.height / 3,
             },
         });
 
         ground.children.iterate(function(child) {
             child
-                .setDisplaySize(game.config.width / 1.5, game.config.height / 20)
+                .setDisplaySize(game.config.width / 1.6, game.config.height / 3)
+                .setSize(310, 30)
+                .setOffset(0, 180)
                 .setDepth(1)
                 .setImmovable(true)
                 .setVelocityY(100);
@@ -321,8 +334,8 @@ class Level1 extends Phaser.Scene {
 
     resetGround(sales) {
         ground.children.iterate(function(child) {
-            if (child.y > game.config.height) {
-                child.y = 0;
+            if (child.y > game.config.height + (game.config.height / 3)) {
+                child.y = -(game.config.height / 3);
             }
         });
     }
@@ -372,6 +385,7 @@ class Level1 extends Phaser.Scene {
                     .setBounce(0.5)
                     .setInteractive();
                 child.y = -100;
+                child.anims.play('energy_anim', true);
             });
 
             this.physics.add.collider(health, ground);
@@ -435,7 +449,6 @@ class Level1 extends Phaser.Scene {
 
         soul -= bigValue;
         soulBarBackground.setDisplaySize((game.config.width / 1.06) + soul, game.config.width / 12)
-
 
         fatcat.disableBody(true, true);
         if (richCustomer.countActive(true) === 0) {
@@ -506,6 +519,7 @@ class Level1 extends Phaser.Scene {
     }
 
     makeHud() {
+
         hudBox = this.physics.add.image(0, 0, 'soul')
             .setDisplaySize(game.config.width, game.config.width / 6)
             .setDepth(1)
@@ -519,7 +533,8 @@ class Level1 extends Phaser.Scene {
         energyBar = this.add.text(20, 0, 'soul:')
             .setDepth(2)
             .setStyle({
-                fontSize: game.config.width / 12,
+                fontFamily: "Verdana",
+                fontSize: game.config.width / 15,
                 fill: '#fff',
                 //backgroundColor: '#FF0000'
             })
@@ -533,7 +548,8 @@ class Level1 extends Phaser.Scene {
         salesBar = this.add.text(20, 60, 'sales:$0')
             .setDepth(1)
             .setStyle({
-                fontSize: game.config.width / 12,
+                fontFamily: "Verdana",
+                fontSize: game.config.width / 15,
                 fill: '#000',
                 backgroundColor: '#68FF75',
             })
@@ -598,7 +614,7 @@ class Level1 extends Phaser.Scene {
             this.add.text(game.config.width / 2, game.config.height / 2.5, deathMessage, )
                 .setOrigin(0.5)
                 .setStyle({
-                    font: "50px Lucida Console",
+                    font: "50px Verdana",
                     align: "center",
                     fill: "#B4FBFB"
                 }).setDepth(4);
@@ -630,19 +646,19 @@ class Level1 extends Phaser.Scene {
         if (gameWin) {
 
             if (soul >= 0) {
-                soulBar.setText('very good');
+                energyBar.setText('very good');
             }
             else if (soul >= -187.5) {
-                soulBar.setText('okay');
+                energyBar.setText('okay');
             }
             else if (soul >= -375) {
-                soulBar.setText('worse');
+                energyBar.setText('worse');
             }
             else if (soul >= -562.5) {
-                soulBar.setText('much worse');
+                energyBar.setText('much worse');
             }
             else if (soul >= -680) {
-                soulBar.setText('terrible');
+                energyBar.setText('terrible');
             }
 
             var victoryMessage = [
@@ -657,7 +673,7 @@ class Level1 extends Phaser.Scene {
             this.add.text(game.config.width / 2, game.config.height / 2.5, victoryMessage, )
                 .setOrigin(0.5)
                 .setStyle({
-                    font: "50px Lucida Console",
+                    font: "50px Verdana",
                     align: "center",
                     fill: "#B4FBFB"
                 }).setDepth(4);

@@ -30,14 +30,15 @@ var config = {
     input: {
         activePointers: 5,
     },
-    scene: [Title, Controls, Level1]
+    scene: [Title, Level1, Controls]
 };
 var title;
+var graphics;
 var desktopControls;
 var mobileControls;
-var graphics;
-var message = [];
-var instructions = [];
+var message;
+var instructions;
+var enemyDescription;
 var sky;
 var skyWall;
 var player;

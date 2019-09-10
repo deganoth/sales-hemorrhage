@@ -50,12 +50,12 @@ class Controls extends Phaser.Scene {
         this.add.rectangle(game.config.width / 1.5, game.config.height / 2.17 , game.config.width / 4, 200, 0xdddddd);
         
         //enemies description
-        var enemies = [
+        enemyDescription = [
             "collect each type",
             "to increase sales."
         ];
 
-        this.add.bitmapText(game.config.width / 2, game.config.height/1.75, 'subTitle', enemies, 50, 1)
+        this.add.bitmapText(game.config.width / 2, game.config.height/1.75, 'subTitle', enemyDescription, 50, 1)
             .setOrigin(0.5); 
 
         //health description
