@@ -30,7 +30,7 @@ var config = {
     input: {
         activePointers: 5,
     },
-    scene: [Title, Level1, Controls]
+    scene: [Title, Level1, Controls, About]
 };
 var tapTime = 0;
 var doubleTapDelay = 300;

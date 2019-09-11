@@ -24,50 +24,17 @@ class Controls extends Phaser.Scene {
             .setOrigin(0.5); 
 
         mobileControls = [
-            "Use the Arrow buttons",
-            "onscreen."
+            "Touch the areas shown",
+            "below to move around."
         ];
 
         this.add.bitmapText(game.config.width / 2, game.config.height/3.8, 'subTitle', mobileControls, 50, 1)
             .setOrigin(0.5); 
 
-        //enemies title description
-        this.add.bitmapText(game.config.width / 2, game.config.height/3, 'titleFont', 'targets', 100, 1)
-            .setOrigin(0.5); 
-
-        this.add.sprite(game.config.width / 3, game.config.height / 2.17, 'bum')
-            .setScale(2)
-            .setOrigin(0.5)
+        this.add.image(game.config.width / 2, game.config.height / 1.8, 'mobile-controls')
+            .setScale(0.7)
+            //.setOrigin(0)
             .setDepth(1);
-
-        this.add.rectangle(game.config.width / 3, game.config.height / 2.17 , game.config.width / 4, 200, 0xdddddd);
-
-        this.add.sprite(game.config.width / 1.5, game.config.height / 2.17, 'fatcat')
-            .setScale(2)
-            .setOrigin(0.5)
-            .setDepth(1);
-        
-        this.add.rectangle(game.config.width / 1.5, game.config.height / 2.17 , game.config.width / 4, 200, 0xdddddd);
-        
-        //enemies description
-        enemyDescription = [
-            "collect each type",
-            "to increase sales."
-        ];
-
-        this.add.bitmapText(game.config.width / 2, game.config.height/1.75, 'subTitle', enemyDescription, 50, 1)
-            .setOrigin(0.5); 
-
-        //health description
-        this.add.bitmapText(game.config.width / 2, game.config.height/1.55, 'titleFont', 'health', 100, 1)
-            .setOrigin(0.5); 
-
-        this.add.sprite(game.config.width / 2, game.config.height / 1.3, 'energy')
-            .setScale(2)
-            .setOrigin(0.5)
-            .setDepth(1);    
-
-        this.add.rectangle(game.config.width / 2, game.config.height / 1.3 , game.config.width / 4, 200, 0xdddddd);
 
         //back to main menu button
         this.exit = this.add.sprite(game.config.width / 2, game.config.height / 1.1, 'exit')

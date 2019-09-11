@@ -11,7 +11,8 @@ class Title extends Phaser.Scene {
         this.load.bitmapFont('energyBarFont', 'assets/fonts/digital-7-white.png', 'assets/fonts/digital-7-white.fnt');
         this.load.image('leftarrow', 'assets/images/left_arrow.png');
         this.load.image('rightarrow', 'assets/images/right_arrow.png');
-        this.load.image('uparrow', 'assets/images/up_arrow.png');
+        this.load.image('mobile-controls', 'assets/new_images/controls_layout.png');
+        this.load.image("start", "assets/new_images/start_button.png");
         this.load.image("start", "assets/new_images/start_button.png");
         this.load.image("controls", "assets/new_images/controls_button.png");
         this.load.image("about", "assets/new_images/about_button.png");
@@ -74,17 +75,8 @@ class Title extends Phaser.Scene {
             
         ];
 
-         this.add.bitmapText(game.config.width / 2, game.config.height/3.5, 'subTitle', message, 60, 1)
+        this.add.bitmapText(game.config.width / 2, game.config.height/3.5, 'subTitle', message, 60, 1)
             .setOrigin(0.5); 
-
-
-        this.add.text(game.config.width / 2, game.config.height / 3, instructions)
-            .setOrigin(0.5)
-            .setStyle({
-                font: "40px Lucida Console",
-                align: "center",
-                fill: '#21FA00'
-            });
 
         //loads the scene stated in the brackets
         //adds button to start game. once clicked, the second scene will be loaded
@@ -94,6 +86,10 @@ class Title extends Phaser.Scene {
 
         this.controls.on('pointerdown', function(pointer) {
             this.scene.start("Controls");
+        }, this);
+
+        this.about.on('pointerdown', function(pointer) {
+            this.scene.start("About");
         }, this);
     }
 }

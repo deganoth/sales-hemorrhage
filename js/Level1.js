@@ -151,26 +151,26 @@ class Level1 extends Phaser.Scene {
 
             hudBox = this.add.image(0, game.config.height / 1.18, 'soul')
                 .setDisplaySize(game.config.width, 200)
-                .setDepth(1)
+                .setDepth(0)
                 .setOrigin(0)
-                .setAlpha(0.3);
+                .setAlpha(0);
 
             l = this.add.sprite(game.config.width / 6, game.config.height/2, 'leftarrow')
                 .setDisplaySize(game.config.width/3, game.config.height)
-                .setDepth(2)
-                .setAlpha(0.1)
+                .setDepth(0)
+                .setAlpha(0.0001)
                 .setInteractive();
 
             j = this.add.sprite(game.config.width / 2, game.config.height/2, 'uparrow')
                 .setDisplaySize(game.config.width/3, game.config.height)
                 .setDepth(2)
-                .setAlpha(0.1)
+                .setAlpha(0.0001)
                 .setInteractive();
 
             r = this.add.sprite(game.config.width / 1.2, game.config.height/2, 'rightarrow')
                 .setDisplaySize(game.config.width/3, game.config.height)
                 .setDepth(2)
-                .setAlpha(0.1)
+                .setAlpha(0.0001)
                 .setInteractive();
 
             //provides left function for up arrow display button
@@ -181,12 +181,6 @@ class Level1 extends Phaser.Scene {
             }, this);   
 
             //provides jump function for up arrow display button
-
-            if(this.input.pointer1.isDown && this.input.pointer2.isDown){
-                j.setTintFill(0xffff00, 0xffff00, 0xff0000, 0xff0000);
-                jump = true;
-                console.log("jump");
-            }
 
             j.on('pointerdown', function(pointer) {
                 j.setTintFill(0xffff00, 0xffff00, 0xff0000, 0xff0000);
