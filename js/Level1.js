@@ -583,7 +583,7 @@ class Level1 extends Phaser.Scene {
         soulValue = soulBarBackground.displayWidth;
         playerY = player.y;
 
-        if (soulValue <= 0 || playerY > game.config.height / 1.18 && this.sys.game.device.input.touch || playerY > game.config.height) {
+        if (soulValue <= 0 || playerY > game.config.height) {
             this.physics.pause();
             soulBarBackground.setDisplaySize(0, 0);
             gameOver = true;
