@@ -14,6 +14,7 @@ class Title extends Phaser.Scene {
         this.load.image('uparrow', 'assets/images/up_arrow.png');
         this.load.image("start", "assets/new_images/start_button.png");
         this.load.image("controls", "assets/new_images/controls_button.png");
+        this.load.image("about", "assets/new_images/about_button.png");
         this.load.image("exit", "assets/new_images/exit_button.png");
         this.load.image('restart', 'assets/images/restart.png');
         this.load.image("sky", "assets/images/sky2.png");
@@ -47,11 +48,15 @@ class Title extends Phaser.Scene {
             .setScale(1.5)
             .setInteractive();
 
-        this.controls = this.add.sprite(game.config.width / 2, game.config.height / 1.75, 'controls')
+        this.controls = this.add.sprite(game.config.width / 2, game.config.height / 1.8, 'controls')
             .setScale(1.5)
             .setInteractive();
 
-        this.exit = this.add.sprite(game.config.width / 2, game.config.height / 1.4, 'exit')
+        this.about = this.add.sprite(game.config.width / 2, game.config.height / 1.48, 'about')
+            .setScale(1.5)
+            .setInteractive();
+
+        this.exit = this.add.sprite(game.config.width / 2, game.config.height / 1.25, 'exit')
             .setScale(1.5)
             .setInteractive();
 

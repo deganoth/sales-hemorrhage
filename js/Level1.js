@@ -7,8 +7,6 @@ class Level1 extends Phaser.Scene {
     }
     create() {
 
-
-
         player = this.physics.add.sprite(game.config.width / 1.6, game.config.height / 2.8, 'dude')
             .setDisplaySize(game.config.height / 14.2, game.config.height / 10)
             .setSize(25, 80)
@@ -157,33 +155,43 @@ class Level1 extends Phaser.Scene {
                 .setOrigin(0)
                 .setAlpha(0.3);
 
-            j = this.add.sprite(game.config.width / 1.2, game.config.height * 0.925, 'uparrow')
-                .setDisplaySize(200, 200)
+            l = this.add.sprite(game.config.width / 6, game.config.height/2, 'leftarrow')
+                .setDisplaySize(game.config.width/3, game.config.height)
                 .setDepth(2)
+                .setAlpha(0.1)
                 .setInteractive();
 
-            l = this.add.sprite(game.config.width / 6, game.config.height * 0.925, 'leftarrow')
-                .setDisplaySize(200, 200)
+            j = this.add.sprite(game.config.width / 2, game.config.height/2, 'uparrow')
+                .setDisplaySize(game.config.width/3, game.config.height)
                 .setDepth(2)
+                .setAlpha(0.1)
                 .setInteractive();
 
-            r = this.add.sprite(game.config.width / 2, game.config.height * 0.925, 'rightarrow')
-                .setDisplaySize(200, 200)
+            r = this.add.sprite(game.config.width / 1.2, game.config.height/2, 'rightarrow')
+                .setDisplaySize(game.config.width/3, game.config.height)
                 .setDepth(2)
+                .setAlpha(0.1)
                 .setInteractive();
-
-            //provides jump function for up arrow display button
-            j.on('pointerdown', function(pointer) {
-                j.setTintFill(0xffff00, 0xffff00, 0xff0000, 0xff0000);
-                jump = true;
-                console.log("jump");
-            }, this);
 
             //provides left function for up arrow display button
             l.on('pointerdown', function(pointer) {
                 l.setTintFill(0xffff00, 0xffff00, 0xff0000, 0xff0000);
                 left = true;
                 console.log("left");
+            }, this);   
+
+            //provides jump function for up arrow display button
+
+            if(this.input.pointer1.isDown && this.input.pointer2.isDown){
+                j.setTintFill(0xffff00, 0xffff00, 0xff0000, 0xff0000);
+                jump = true;
+                console.log("jump");
+            }
+
+            j.on('pointerdown', function(pointer) {
+                j.setTintFill(0xffff00, 0xffff00, 0xff0000, 0xff0000);
+                jump = true;
+                console.log("jump");
             }, this);
 
             //provides right function for up arrow display button

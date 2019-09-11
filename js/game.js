@@ -32,6 +32,8 @@ var config = {
     },
     scene: [Title, Level1, Controls]
 };
+var tapTime = 0;
+var doubleTapDelay = 300;
 var title;
 var graphics;
 var desktopControls;
