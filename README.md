@@ -1,4 +1,6 @@
 
+<img src = "https://raw.githubusercontent.com/deganoth/sales-hemorrhage/master/assets/new_images/hemorrhageBig.png" width=350 style="display: block; float: left; padding-right: 30px;">
+
 # Sales Hemorrhage - A sales based cross platform platformer game.
 
 ## Link to the game 
