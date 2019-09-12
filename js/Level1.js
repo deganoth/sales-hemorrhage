@@ -535,7 +535,7 @@ class Level1 extends Phaser.Scene {
         energyBar = this.add.text(20, 0, 'soul:')
             .setDepth(2)
             .setStyle({
-                fontFamily: 'Gugi',
+                fontFamily: 'digital-7',
                 fontSize: game.config.width / 15,
                 fill: '#fff',
                 //backgroundColor: '#FF0000'
@@ -550,12 +550,12 @@ class Level1 extends Phaser.Scene {
         salesBar = this.add.text(20, 60, 'sales:$0')
             .setDepth(1)
             .setStyle({
-                fontFamily: 'Gugi',
+                fontFamily: 'digital-7',
                 fontSize: game.config.width / 15,
                 fill: '#000',
                 backgroundColor: '#68FF75',
             })
-            .setOrigin(0);
+            .setOrigin(0)
     }
 
     soulBarText() {
@@ -616,7 +616,7 @@ class Level1 extends Phaser.Scene {
             this.add.text(game.config.width / 2, game.config.height / 2.5, deathMessage, )
                 .setOrigin(0.5)
                 .setStyle({
-                    font: "50px Gugi",
+                    font: "50px digital-7",
                     align: "center",
                     fill: "#B4FBFB"
                 }).setDepth(4);
@@ -675,7 +675,7 @@ class Level1 extends Phaser.Scene {
             this.add.text(game.config.width / 2, game.config.height / 2.5, victoryMessage, )
                 .setOrigin(0.5)
                 .setStyle({
-                    font: "50px Gugi",
+                    font: "50px digital-7",
                     align: "center",
                     fill: "#B4FBFB"
                 }).setDepth(4);

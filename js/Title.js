@@ -6,6 +6,12 @@ class Title extends Phaser.Scene {
     }
 
     preload() {
+
+        this.add.text(0, 0, "hack", {
+            font:"1px digital-7", 
+            fill:"#FFFFFF"
+        });
+
         this.load.bitmapFont('titleFont', 'assets/fonts/BALLSONTHERAMPAGE.png', 'assets/fonts/BALLSONTHERAMPAGE.fnt');
         this.load.bitmapFont('subTitle', 'assets/fonts/digital-7.png', 'assets/fonts/digital-7.fnt');
         this.load.bitmapFont('energyBarFont', 'assets/fonts/digital-7-white.png', 'assets/fonts/digital-7-white.fnt');
