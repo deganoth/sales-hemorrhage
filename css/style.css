@@ -5,6 +5,7 @@ body {
 }
 
 .canvas {
+	font-family: 'Gugi', cursive;
     display: block;
     margin: 0;
     position: absolute;
