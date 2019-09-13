@@ -309,7 +309,7 @@ class Level1 extends Phaser.Scene {
 
     makeGround() {
         ground = this.physics.add.group({
-            key: 'stairs',
+            key: 'ground',
             repeat: 4,
             collideWorldBounds: true,
             setXY: {

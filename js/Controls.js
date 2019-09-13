@@ -37,13 +37,13 @@ class Controls extends Phaser.Scene {
             .setDepth(1);
 
         //back to main menu button
-        this.exit = this.add.sprite(game.config.width / 2, game.config.height / 1.1, 'exit')
+        this.menu = this.add.sprite(game.config.width / 2, game.config.height / 1.1, 'menu')
             .setScale(1)
             .setInteractive();
 
         //loads the scene stated in the brackets
         //adds button to start game. once clicked, the second scene will be loaded
-        this.exit.on('pointerdown', function(pointer) {
+        this.menu.on('pointerdown', function(pointer) {
             this.scene.start("Title");
         }, this);
 

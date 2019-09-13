@@ -19,15 +19,16 @@ class Title extends Phaser.Scene {
         this.load.image('rightarrow', 'assets/images/right_arrow.png');
         this.load.image('mobile-controls', 'assets/new_images/controls_layout.png');
         this.load.image("start", "assets/new_images/start_button.png");
-        this.load.image("start", "assets/new_images/start_button.png");
         this.load.image("controls", "assets/new_images/controls_button.png");
         this.load.image("about", "assets/new_images/about_button.png");
+        this.load.image("menu", "assets/new_images/menu_button.png")
         this.load.image("exit", "assets/new_images/exit_button.png");
         this.load.image('restart', 'assets/images/restart.png');
         this.load.image("sky", "assets/images/sky2.png");
         this.load.image("soul", "assets/images/soul_bar.png");
         this.load.image("sales", "assets/images/sales_bar.png");
         this.load.image("stairs", "assets/new_images/stairs.png");
+        this.load.image("ground", "assets/new_images/platform.png")
         this.load.spritesheet("bum", "assets/new_images/bum-customer.png",{
             frameWidth: 66.5,
             frameHeight: 100
