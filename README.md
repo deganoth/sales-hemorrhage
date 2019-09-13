@@ -1,5 +1,5 @@
 
-<img src = "https://raw.githubusercontent.com/deganoth/sales-hemorrhage/master/assets/new_images/hemorrhageBig.png" style="display: block; margin-left: auto; margin-right: auto; width: 50%;">
+<img src = "https://raw.githubusercontent.com/deganoth/sales-hemorrhage/master/assets/new_images/hemorrhageBig.png" target= "_blank" style="display: block; margin-left: auto; margin-right: auto; width: 50%;">
 
 # Sales Hemorrhage - A sales based cross platform platformer game.
 
@@ -26,7 +26,7 @@ portrait vs landscape builds. Through tutorial examples I learned how to arrange
 to move between. In the Phaser framework, scenes work like pages of a website. 
 
 ### Design/ Functionality
-<img src="https://raw.githubusercontent.com/deganoth/sales-hemorrhage/master/assets/new_images/color_chart.png" width=350 style="display: block; float: left; padding-right: 30px;">
+<img src="https://raw.githubusercontent.com/deganoth/sales-hemorrhage/master/assets/new_images/color_chart.png" target="_blank" width=350 style="display: block; float: left; padding-right: 30px;">
 With the theme of the game being a retail environment, A somewhat digital feel has been used. Blocky text with 
 LCD style fonts. These were added via the Phaser bitmap font loading. It allows for custom fonts to be used.
 An earthy color palette was chosen to represent the humdrum life of an employee. 
@@ -42,6 +42,7 @@ This collection of buttons is layout in the title screen. Their layout is set by
 configuration file as variables, and setting the position by dividing the value accordingly. It has 4 buttons. Start, Controls, About and Exit. 
 Star begins gameplay. About details in game element to collect, including enemies and health. Controls tells the player how to 
 move around on each device, and exit closes the game. 
+
 #### 2. Scoring System
 Playing as a retail employee, your goal is the reach your sales target. This is shown at the top of the screen as a green bar.
 As you collect each sale, the text on the green area reflects this. In addition, there is an energy meter. It's function is to 
@@ -59,6 +60,7 @@ if said target is reached. Alternatively, a similar operation was used to determ
 x dimension of the red energyBar is queried to see if it has reached 0 in width, resulting in a game over. 
 The third ending queries the y position of the player. If it registers as greater than the game window height as set in the game configuration script,
 the game is paused and a screen appears asking if you'd like to play again. 
+
 #### 4. Endless Scrolling Screen
 This gives the player the sense of an endless tower ahead of them. Constantly climbing towards sales heaven.
 Making use of the arcade physics system in Phaser 3, each element can be set to react to physics. This is the case for the blue background.
@@ -67,20 +69,23 @@ set to ignore gravity, and be set as immovable. Both are functions within the Ph
 In this case, a Y velocity. To achieve the scrolling effect, a group containing multiple instances of the same object must be created. Using a "physics group",
 settings can be assigned regarding the quantity and X and Y spread across the screen. In addition, a reset function for each instance must be used to send 
 any element that moves off screen back to the top. Setting y values above and below the screen height value allow for seamless scrolling.
+
 #### 5. Touch Screen Controls
 Three areas on screen are dedicated to player movement. Divided vertically from left to right, the controls are; move left, jump and move right.
 each area takes up one third of the x value, and the full y value for the game configuration width and height. Initially set as three buttons onscreen, 
 I decided to make the screen less cluttered, and feel more natural to play. 
+
 #### 6. Enemy AI
 With three onscreen objects moving around by themselves, it creates a challenge difficult to navigate. Using a mimic of the player controls, each of the two
 enemies react in different ways to player movement. The X velocity for each enemy is set differently, and conversely to the player movement. Jump remains the same
 for all characters. The health token has a much lower x and y velocity, so it appears to float through the level when on screen. All three elements have the same 
 reset function as the scrolling background. If a sale is missed, it will appear at the top of the screen again, in a random position.
-
 #### 8. Scalable Play Screen 
+
 This comes as a feature of the Phaser 3 framework. In the game configuration script, while setting the static game width and height, and additional option for allowing
 the screen to "fit" within any screen size is available. This is controlled by the Phaser Scale Manager. It can scale a pre set screen size to suit any device screen size.
 #### 9. Simulated Physics
+
 The primary reason for me to choose this javascript framework was it's standard physics engine. It makes gameplay programming more complex, and the results less obvious.
 In addition the feel of the game is more natural with simulated physics in use. I chose to make all elements physics based, so the game would be fully interactive within the 
 world created.
@@ -234,7 +239,6 @@ Using phaser 3 scale manager
 
 Group scaling
 * https://labs.phaser.io/edit.html?src=src/game objects\group\set scale.js
-
 
 Pick random sound from range
 * http://www.html5gamedevs.com/topic/37506-pick-random-element/
