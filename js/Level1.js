@@ -571,7 +571,7 @@ class Level1 extends Phaser.Scene {
         energyBar = this.add.text(20, 0, 'soul:')
             .setDepth(2)
             .setStyle({
-                fontFamily: 'Verdana',
+                fontFamily: 'digital-7',
                 fontSize: game.config.width / 15,
                 fill: '#fff',
                 //backgroundColor: '#FF0000'
@@ -586,7 +586,7 @@ class Level1 extends Phaser.Scene {
         salesBar = this.add.text(20, 60, 'sales:$0')
             .setDepth(1)
             .setStyle({
-                fontFamily: 'Verdana',
+                fontFamily: 'digital-7',
                 fontSize: game.config.width / 15,
                 fill: '#000',
                 backgroundColor: '#68FF75',
