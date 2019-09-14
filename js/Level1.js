@@ -695,6 +695,7 @@ class Level1 extends Phaser.Scene {
             }, this);
 
             menu.on('pointerdown', function(pointer){
+                levelOneMusic.stop();
                 this.scene.start("Title");
             }, this);
         }
@@ -755,6 +756,7 @@ class Level1 extends Phaser.Scene {
             }, this);
 
              menu.on('pointerdown', function(pointer){
+                levelOneMusic.stop();
                 this.scene.start("Title");
             }, this);
         }
