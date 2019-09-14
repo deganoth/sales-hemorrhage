@@ -669,22 +669,22 @@ class Level1 extends Phaser.Scene {
             ];
 
             this.backgroundBlack = this.add.sprite(game.config.width / 2, game.config.height / 2, 'background')
-                .setDepth(3)
+                .setDepth(4)
                 .setInteractive();
 
             this.add.bitmapText(game.config.width / 2, game.config.height/3, 'subTitle', deathMessage, 60, 1)
                 .setOrigin(0.5)
-                .setDepth(4);
+                .setDepth(5);
 
             restart = this.add.sprite(game.config.width / 2, game.config.height / 2, 'restart')
                 .setScale(1.5)
                 .setInteractive()
-                .setDepth(4);
+                .setDepth(5);
 
              menu = this.add.sprite(game.config.width / 2, game.config.height / 1.6, 'menu')
                 .setScale(1.5)
                 .setInteractive()
-                .setDepth(4);
+                .setDepth(5);
 
             //when click, the button will restart the current scene, game over will be false
             restart.on('pointerdown', function(pointer) {
@@ -730,22 +730,22 @@ class Level1 extends Phaser.Scene {
             ];
 
             this.backgroundBlack = this.add.sprite(game.config.width / 2, game.config.height / 2, 'background')
-                .setDepth(3)
+                .setDepth(4)
                 .setInteractive();
 
             this.add.bitmapText(game.config.width / 2, game.config.height/3, 'subTitle', victoryMessage, 60, 1)
                 .setOrigin(0.5)
-                .setDepth(4);
+                .setDepth(5);
 
             restart = this.add.sprite(game.config.width / 2, game.config.height / 2, 'restart')
                 .setScale(1.5)
                 .setInteractive()
-                .setDepth(4);
+                .setDepth(5);
 
              menu = this.add.sprite(game.config.width / 2, game.config.height / 1.6, 'menu')
                 .setScale(1.5)
                 .setInteractive()
-                .setDepth(4);
+                .setDepth(5);
 
             //when click, the button will restart the current scene, game over will be false
             restart.on('pointerdown', function(pointer) {
