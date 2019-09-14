@@ -1,6 +1,0 @@
-E:\CodeInstitute\wamp_server\www\sales-hemorrhage
-https://github.com/deganoth/sales-hemorrhage
-
-git@github.com:deganoth/sales-hemorrhage.git
-
-https://github.com/deganoth/sales-hemorrhage.git
