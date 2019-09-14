@@ -636,7 +636,7 @@ class Level1 extends Phaser.Scene {
             soulBarBackground.setDisplaySize(game.config.width / 1.06, game.config.width / 12);
         }
 
-        if (sales >= 100) {
+        if (sales >= 10000) {
 
             this.tweens.add({
                 targets:  levelOneMusic,
@@ -654,8 +654,6 @@ class Level1 extends Phaser.Scene {
     restartScreen() {
         if (gameOver) {
             
-            
-
             var deathMessage = [
                 "Try Again!",
                 "You Almost reached",
