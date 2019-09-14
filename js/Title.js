@@ -222,7 +222,7 @@ class Title extends Phaser.Scene {
 
         this.about.on('pointerdown', function(pointer) {
             titleMusic.pause();
-            this.scene.start("About");
+            this.scene.start("About"); 
         }, this);
     }
 }

@@ -47,7 +47,7 @@ class About extends Phaser.Scene {
         this.add.rectangle(game.config.width / 2, game.config.height / 2 , game.config.width / 4, 200, 0xdddddd);
 
         //objectives
-        message = [
+        message1 = [
             "Incease your sales",
             "by collecting each",
             "customer",
@@ -56,7 +56,7 @@ class About extends Phaser.Scene {
         this.add.bitmapText(game.config.width / 2, game.config.height/1.5, 'titleFont', 'objectives', 100, 1)
             .setOrigin(0.5); 
 
-        this.add.bitmapText(game.config.width / 2, game.config.height/1.3, 'subTitle', message, 60, 1)
+        this.add.bitmapText(game.config.width / 2, game.config.height/1.3, 'subTitle', message1, 60, 1)
             .setOrigin(0.5); 
 
         //back to main menu button
