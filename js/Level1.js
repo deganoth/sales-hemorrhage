@@ -196,39 +196,30 @@ class Level1 extends Phaser.Scene {
 
             //provides left function for up arrow display button
             l.on('pointerdown', function(pointer) {
-                l.setTintFill(0xffff00, 0xffff00, 0xff0000, 0xff0000);
                 left = true;
-                console.log("left");
             }, this);   
 
             //provides jump function for up arrow display button
 
             j.on('pointerdown', function(pointer) {
-                j.setTintFill(0xffff00, 0xffff00, 0xff0000, 0xff0000);
                 jump = true;
-                console.log("jump");
             }, this);
 
             //provides right function for up arrow display button
             r.on('pointerdown', function(pointer) {
-                r.setTintFill(0xffff00, 0xffff00, 0xff0000, 0xff0000);
                 right = true;
-                console.log("right");
             }, this);
 
             //disengages function when any of the buttons are not being engaged
             j.on('pointerup', function(pointer) {
-                j.clearTint();
                 jump = false;
             }, this);
 
             l.on('pointerup', function(pointer) {
-                l.clearTint();
                 left = false;
             }, this);
 
             r.on('pointerup', function(pointer) {
-                r.clearTint();
                 right = false;
             }, this);
         }
