@@ -6,7 +6,8 @@ class Controls extends Phaser.Scene {
     }
 
     create() {
-       
+       titleMusic.resume();
+
         //desktop controls description
         this.add.bitmapText(game.config.width / 2, game.config.height/30, 'titleFont', 'desktop', 100, 1)
             .setOrigin(0.5); 
@@ -44,6 +45,7 @@ class Controls extends Phaser.Scene {
         //loads the scene stated in the brackets
         //adds button to start game. once clicked, the second scene will be loaded
         this.menu.on('pointerdown', function(pointer) {
+            titleMusic.pause();
             this.scene.start("Title");
         }, this);
 

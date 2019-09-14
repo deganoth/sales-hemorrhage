@@ -274,3 +274,15 @@ Font load open type
 * https://codeinstitute.net/ - For making this possible.
 * https://www.youtube.com/channel/UCoLblLUQbqjfCAmU13LbwHw - Luis Zuno. Easy to follow videos, great solutions.
 * https://phaser.io/examples - It's always in the last place you look. Invaluable resource for knowing their own platform! 
+
+### SFX
+* https://freesound.org/people/kiddpark/sounds/201159/ - kiddpark
+* https://freesound.org/people/Zott820/sounds/209578/ - Zott820
+* https://freesound.org/people/Timbre/sounds/404028/ - Timbre
+* https://freesound.org/people/broodmes/sounds/47962/ - broodmes
+* https://freesound.org/people/creek23/sounds/75235/ - creek23
+* https://www.youtube.com/watch?v=lZ_DyimkS54 - Jezz Bezos
+* https://freesound.org/people/LudwigMueller/sounds/459164/ - LudwigMeuller
+* https://freesound.org/people/gpag1/sounds/388822/ - gpag1
+* https://freesound.org/people/SilverIllusionist/sounds/411172/ - SilverIllusionist
+

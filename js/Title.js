@@ -6,15 +6,69 @@ class Title extends Phaser.Scene {
     }
 
     preload() {
-
-        this.add.text(0, 0, "hack", {
-            font:"1px digital-7", 
-            fill:"#FFFFFF"
-        });
-
+        //load audio
+        this.load.audio('menu', [
+            'assets/audio/003 Fight.ogg',
+            'assets/audio/003 Fight.mp3'
+        ]);
+        this.load.audio('playing', [
+            'assets/audio/002 Break.ogg',
+            'assets/audio/002 Break.mp3'
+        ]);
+        this.load.audio('cheap_one', [
+            'assets/audio/cheap_one.ogg',
+            'assets/audio/cheap_one.mp3'
+        ]);
+        this.load.audio('cheap_two', [
+            'assets/audio/cheap_two.ogg',
+            'assets/audio/cheap_two.mp3'
+        ]);
+        this.load.audio('cheap_three', [
+            'assets/audio/cheap_three.ogg',
+            'assets/audio/cheap_three.mp3'
+        ]);
+        this.load.audio('cheap_four', [
+            'assets/audio/cheap_four.ogg',
+            'assets/audio/cheap_four.mp3'
+        ]);
+        this.load.audio('rich_one', [
+            'assets/audio/rich_one.ogg',
+            'assets/audio/rich_one.mp3'
+        ]);
+        this.load.audio('rich_two', [
+            'assets/audio/rich_two.ogg',
+            'assets/audio/rich_two.mp3'
+        ]);
+        this.load.audio('rich_three', [
+            'assets/audio/rich_three.ogg',
+            'assets/audio/rich_three.mp3'
+        ]);
+        this.load.audio('rich_four', [
+            'assets/audio/rich_four.ogg',
+            'assets/audio/rich_four.mp3'
+        ]);
+        this.load.audio('coffee_one', [
+            'assets/audio/coffe_one.ogg',
+            'assets/audio/coffe_one.mp3'
+        ]);
+        this.load.audio('coffee_two', [
+            'assets/audio/coffe_two.ogg',
+            'assets/audio/coffe_two.mp3'
+        ]);
+        this.load.audio('coffee_three', [
+            'assets/audio/coffe_three.ogg',
+            'assets/audio/coffe_three.mp3'
+        ]);
+        this.load.audio('coffee_four', [
+            'assets/audio/coffe_four.ogg',
+            'assets/audio/coffe_four.mp3'
+        ]);
+        //load fonts
         this.load.bitmapFont('titleFont', 'assets/fonts/BALLSONTHERAMPAGE.png', 'assets/fonts/BALLSONTHERAMPAGE.fnt');
         this.load.bitmapFont('subTitle', 'assets/fonts/digital-7.png', 'assets/fonts/digital-7.fnt');
         this.load.bitmapFont('energyBarFont', 'assets/fonts/digital-7-white.png', 'assets/fonts/digital-7-white.fnt');
+
+        //load images
         this.load.image('leftarrow', 'assets/images/left_arrow.png');
         this.load.image('rightarrow', 'assets/images/right_arrow.png');
         this.load.image('mobile-controls', 'assets/new_images/controls_layout.png');
@@ -29,6 +83,8 @@ class Title extends Phaser.Scene {
         this.load.image("sales", "assets/images/sales_bar.png");
         this.load.image("stairs", "assets/new_images/stairs.png");
         this.load.image("ground", "assets/new_images/platform.png")
+
+        //load sprites
         this.load.spritesheet("bum", "assets/new_images/bum-customer.png",{
             frameWidth: 66.5,
             frameHeight: 100
@@ -52,6 +108,19 @@ class Title extends Phaser.Scene {
     }
 
     create() {
+
+        titleMusic = this.sound.add('menu')
+            
+        titleMusic.play({
+            volume: .3,
+            loop: true
+        });
+
+        this.add.text(0, 0, "hack", {
+            font:"1px digital-7", 
+            fill:"#FFFFFF"
+        });
+
         this.start = this.add.sprite(game.config.width / 2, game.config.height / 2.3, 'start')
             .setScale(1.5)
             .setInteractive();
@@ -88,14 +157,22 @@ class Title extends Phaser.Scene {
         //loads the scene stated in the brackets
         //adds button to start game. once clicked, the second scene will be loaded
         this.start.on('pointerdown', function(pointer) {
+            titleMusic.stop();
+            this.tweens.add({
+                targets:  titleMusic,
+                volume:   0,
+                duration: 500
+            });
             this.scene.start("Level1");
         }, this);
 
         this.controls.on('pointerdown', function(pointer) {
+            titleMusic.pause();
             this.scene.start("Controls");
         }, this);
 
         this.about.on('pointerdown', function(pointer) {
+            titleMusic.pause();
             this.scene.start("About");
         }, this);
     }

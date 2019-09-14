@@ -5,7 +5,17 @@ class Level1 extends Phaser.Scene {
         super("Level1");
 
     }
+
     create() {
+
+        levelOneMusic = this.sound.add('playing')
+            
+        levelOneMusic.play({
+            volume: .3,
+            loop: true
+        });
+
+        
 
         player = this.physics.add.sprite(game.config.width / 1.6, game.config.height / 2.8, 'dude')
             .setDisplaySize(game.config.height / 14.2, game.config.height / 10)
@@ -397,6 +407,15 @@ class Level1 extends Phaser.Scene {
     }
 
     addEnergy(player, energy) {
+
+        this.sound.play(Phaser.Math.RND.pick﻿([
+            'coffee_one', 
+            'coffee_two', 
+            'coffee_three', 
+            'coffee_four'
+            ]
+        ));
+
         sales -= 50;
         salesBar.setText('sales:$' + sales);
 
@@ -445,6 +464,15 @@ class Level1 extends Phaser.Scene {
     }
 
     destroyRichCustomer(player, fatcat) {
+
+        this.sound.play(Phaser.Math.RND.pick﻿([
+            'rich_one', 
+            'rich_two', 
+            'rich_three', 
+            'rich_four'
+            ]
+        ));
+
 
         sales += bigSale;
         salesBar.setText('sales:$' + sales);
@@ -500,6 +528,14 @@ class Level1 extends Phaser.Scene {
     }
 
     destroyCheapCustomer(player, bum) {
+
+        this.sound.play(Phaser.Math.RND.pick﻿([
+            'cheap_one', 
+            'cheap_two', 
+            'cheap_three', 
+            'cheap_four'
+            ]
+        ));
 
         sales += regularSale;
         salesBar.setText('sales:$' + sales);
@@ -579,11 +615,18 @@ class Level1 extends Phaser.Scene {
     }
 
     gameEnd() {
+        
 
         soulValue = soulBarBackground.displayWidth;
         playerY = player.y;
 
         if (soulValue <= 0 || playerY > game.config.height) {
+            
+            this.tweens.add({
+                targets:  levelOneMusic,
+                volume:   0,
+                duration: 500
+            });
             this.physics.pause();
             soulBarBackground.setDisplaySize(0, 0);
             gameOver = true;
@@ -593,7 +636,14 @@ class Level1 extends Phaser.Scene {
             soulBarBackground.setDisplaySize(game.config.width / 1.06, game.config.width / 12);
         }
 
-        if (sales >= 10000) {
+        if (sales >= 100) {
+
+            this.tweens.add({
+                targets:  levelOneMusic,
+                volume:   0,
+                duration: 500
+            });
+    
             this.physics.pause();
             gameWin = true;
             this.gameWinScreen();
@@ -603,6 +653,8 @@ class Level1 extends Phaser.Scene {
 
     restartScreen() {
         if (gameOver) {
+            
+            
 
             var deathMessage = [
                 "Try Again!",
@@ -634,6 +686,7 @@ class Level1 extends Phaser.Scene {
 
             //when click, the button will restart the current scene, game over will be false
             restart.on('pointerdown', function(pointer) {
+                titleMusic.pause();
                 restart.setTintFill(0xffff00, 0xffff00, 0xff0000, 0xff0000);
                 this.scene.restart();
                 console.log('restart');
@@ -693,6 +746,7 @@ class Level1 extends Phaser.Scene {
 
             //when click, the button will restart the current scene, game over will be false
             restart.on('pointerdown', function(pointer) {
+                titleMusic.pause();
                 restart.setTintFill(0xffff00, 0xffff00, 0xff0000, 0xff0000);
                 this.scene.restart();
                 console.log('restart');

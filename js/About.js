@@ -7,6 +7,7 @@ class About extends Phaser.Scene {
 
     create() {
     
+        titleMusic.resume();
         //enemies title description
         this.add.bitmapText(game.config.width / 2, game.config.height/30, 'titleFont', 'targets', 100, 1)
             .setOrigin(0.5); 
@@ -50,8 +51,6 @@ class About extends Phaser.Scene {
             "Incease your sales",
             "by collecting each",
             "customer",
-            
-            
         ];
 
         this.add.bitmapText(game.config.width / 2, game.config.height/1.5, 'titleFont', 'objectives', 100, 1)
@@ -68,6 +67,7 @@ class About extends Phaser.Scene {
         //loads the scene stated in the brackets
         //adds button to start game. once clicked, the second scene will be loaded
         this.menu.on('pointerdown', function(pointer) {
+            titleMusic.pause();
             this.scene.start("Title");
         }, this);
 
