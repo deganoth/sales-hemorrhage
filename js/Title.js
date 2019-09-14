@@ -142,9 +142,6 @@ class Title extends Phaser.Scene {
             .setScale(1.5)
             .setInteractive();
 
-        this.exit = this.add.sprite(game.config.width / 2, game.config.height / 1.25, 'exit')
-            .setScale(1.5)
-            .setInteractive();
 
         title = [
             "sales",
