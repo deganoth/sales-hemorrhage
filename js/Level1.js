@@ -3,7 +3,6 @@ class Level1 extends Phaser.Scene {
     constructor() {
         //scene identifier is playGame
         super("Level1");
-
     }
 
     create() {
@@ -15,8 +14,6 @@ class Level1 extends Phaser.Scene {
             loop: true
         });
 
-        
-
         player = this.physics.add.sprite(game.config.width / 1.6, game.config.height / 2.8, 'dude')
             .setDisplaySize(game.config.height / 14.2, game.config.height / 10)
             .setSize(25, 80)
@@ -25,6 +22,12 @@ class Level1 extends Phaser.Scene {
             .setCollideWorldBounds(true)
             .setDepth(1)
             .setBounce(0.2)
+
+        dollar = this.add.sprite(-100, -100, 'dollar')
+            .setDepth(4);
+
+        boost = this.add.sprite(-100, -100, 'boost')
+            .setDepth(4);
 
         ground = this.physics.add.group();
 
@@ -70,7 +73,6 @@ class Level1 extends Phaser.Scene {
             this.resetRichCustomer();
             this.soulBarText();
             this.gameEnd();
-            
         }
     }
 
@@ -84,15 +86,24 @@ class Level1 extends Phaser.Scene {
             repeat: -1,
         });
 
-        //player animations
         this.anims.create({
-            key: "explode_anim",
-            frames: this.anims.generateFrameNumbers("explode"),
+            key: "health_collect",
+            frames: this.anims.generateFrameNumbers("boost", { start: 0, end: 5}),
             frameRate: 15,
             repeat: 0,
             hideOnComplete: true,
         });
 
+        //dollar animations
+        this.anims.create({
+            key: "money_collect",
+            frames: this.anims.generateFrameNumbers("dollar", { start: 0, end: 5}),
+            frameRate: 15,
+            repeat: 0,
+            hideOnComplete: true,
+        });
+
+        //player animations
         this.anims.create({
             key: 'left',
             frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
@@ -224,10 +235,10 @@ class Level1 extends Phaser.Scene {
     }
 
     updateControls() {
+
         if (cursors.left.isDown || controls.A.isDown || left) {
             player.setVelocityX(-500);
             player.anims.play('left', true);
-            
         }
         else if (cursors.right.isDown || controls.D.isDown || right) {
             player.setVelocityX(500);
@@ -299,9 +310,8 @@ class Level1 extends Phaser.Scene {
 
         skyWall.children.iterate(function(child) {
             child
-                .setDisplaySize(game.config.width, game.config.height / 3)
+                .setDisplaySize(game.config.width, game.config.height / 2.8)
                 .setDepth(0)
-                //.setOrigin(1)
                 .setImmovable(true)
                 .setVelocityY(50);
 
@@ -366,7 +376,6 @@ class Level1 extends Phaser.Scene {
                 .setOffset(18, 20)
                 .setGravityY(-500)
                 .setVelocity(Phaser.Math.Between(-200, -100), 10)
-                //.setScale(Phaser.Math.Between(3, 4))
                 .setRandomPosition(Phaser.Math.Between(game.config.width / 10, game.config.width / 5), 0, game.config.width, game.config.height)
                 .setBounce(0.5)
                 .setInteractive();
@@ -392,7 +401,6 @@ class Level1 extends Phaser.Scene {
                     .setOffset(18, 20)
                     .setGravityY(-500)
                     .setVelocity(Phaser.Math.Between(-200, -100), 20)
-                    //.setScale(Phaser.Math.Between(3, 4))
                     .setRandomPosition(Phaser.Math.Between(game.config.width / 10, game.config.width / 5), 0, game.config.width, game.config.height)
                     .setBounce(0.5)
                     .setInteractive();
@@ -407,6 +415,13 @@ class Level1 extends Phaser.Scene {
     }
 
     addEnergy(player, energy) {
+
+        boost.x = energy.x;
+        boost.y = energy.y;
+        boost.anims.play("health_collect", true);
+
+        boost = this.add.sprite(-100, -100, 'boost')
+            .setDepth(4);
 
         this.sound.play(Phaser.Math.RND.pick﻿([
             'coffee_one', 
@@ -447,9 +462,7 @@ class Level1 extends Phaser.Scene {
 
         this.physics.add.collider(richCustomer, ground);
         this.physics.add.collider(richCustomer, cheapCustomer);
-        //this.physics.add.collider(richCustomer, player);
         this.physics.add.overlap(player, richCustomer, this.destroyRichCustomer, null, this);
-        
 
     }
 
@@ -465,6 +478,13 @@ class Level1 extends Phaser.Scene {
 
     destroyRichCustomer(player, fatcat) {
 
+        dollar.x = fatcat.x;
+        dollar.y = fatcat.y;
+        dollar.anims.play("money_collect", true);
+
+        dollar = this.add.sprite(-100, -100, 'dollar')
+            .setDepth(4);
+
         this.sound.play(Phaser.Math.RND.pick﻿([
             'rich_one', 
             'rich_two', 
@@ -473,7 +493,6 @@ class Level1 extends Phaser.Scene {
             ]
         ));
 
-
         sales += bigSale;
         salesBar.setText('sales:$' + sales);
 
@@ -481,6 +500,7 @@ class Level1 extends Phaser.Scene {
         soulBarBackground.setDisplaySize((game.config.width / 1.06) + soul, game.config.width / 12)
 
         fatcat.disableBody(true, true);
+
         if (richCustomer.countActive(true) === 0) {
             richCustomer.children.iterate(function(child) {
                 child.enableBody(true, child.x, 0, true, true)
@@ -489,6 +509,7 @@ class Level1 extends Phaser.Scene {
                 child.y = -100;
             });
         }
+
     }
 
     makeCheapCustomer() {
@@ -529,6 +550,13 @@ class Level1 extends Phaser.Scene {
 
     destroyCheapCustomer(player, bum) {
 
+        dollar.x = bum.x;
+        dollar.y = bum.y;
+        dollar.anims.play("money_collect", true);
+
+        dollar = this.add.sprite(-100, -100, 'dollar')
+            .setDepth(4);
+
         this.sound.play(Phaser.Math.RND.pick﻿([
             'cheap_one', 
             'cheap_two', 
@@ -558,40 +586,29 @@ class Level1 extends Phaser.Scene {
 
     makeHud() {
 
-        hudBox = this.physics.add.image(0, 0, 'soul')
+        hudBox = this.physics.add.image(0, 0, 'background')
             .setDisplaySize(game.config.width, game.config.width / 6)
             .setDepth(1)
             .setOrigin(0)
-            .setAlpha(0.3)
+            
             .setImmovable(true);
         hudBox.body.setAllowGravity(false);
 
         this.physics.add.collider(player, hudBox);
 
-        energyBar = this.add.text(20, 0, 'soul:')
+        energyBar = this.add.bitmapText(20, 0, 'subTitle', 'energy: ', 60, 1)
             .setDepth(2)
-            .setStyle({
-                fontFamily: 'digital-7',
-                fontSize: game.config.width / 15,
-                fill: '#fff',
-                //backgroundColor: '#FF0000'
-            })
-            .setOrigin(0);
+            .setOrigin(0); 
 
         soulBarBackground = this.add.image(20, 0, 'soul')
             .setDisplaySize(game.config.width / 1.06, game.config.width / 12)
+            .setAlpha(0.6)
             .setDepth(1)
             .setOrigin(0);
 
-        salesBar = this.add.text(20, 60, 'sales:$0')
-            .setDepth(1)
-            .setStyle({
-                fontFamily: 'digital-7',
-                fontSize: game.config.width / 15,
-                fill: '#000',
-                backgroundColor: '#68FF75',
-            })
-            .setOrigin(0)
+        salesBar = this.add.bitmapText(20, 60, 'subTitle', 'sales: $ ', 60, 1)
+            .setDepth(2)
+            .setOrigin(0); 
     }
 
     soulBarText() {
@@ -615,13 +632,10 @@ class Level1 extends Phaser.Scene {
     }
 
     gameEnd() {
-        
-
         soulValue = soulBarBackground.displayWidth;
         playerY = player.y;
 
         if (soulValue <= 0 || playerY > game.config.height) {
-            
             this.tweens.add({
                 targets:  levelOneMusic,
                 volume:   0,
@@ -636,7 +650,7 @@ class Level1 extends Phaser.Scene {
             soulBarBackground.setDisplaySize(game.config.width / 1.06, game.config.width / 12);
         }
 
-        if (sales >= 10000) {
+        if (sales >= targetChoice) {
 
             this.tweens.add({
                 targets:  levelOneMusic,
@@ -663,34 +677,34 @@ class Level1 extends Phaser.Scene {
                 "..."
             ];
 
-            this.add.text(game.config.width / 2, game.config.height / 2.5, deathMessage, )
-                .setOrigin(0.5)
-                .setStyle({
-                    font: "50px Verdana",
-                    align: "center",
-                    fill: "#B4FBFB"
-                }).setDepth(4);
+            this.backgroundBlack = this.add.sprite(game.config.width / 2, game.config.height / 2, 'background')
+                .setDepth(3)
+                .setInteractive();
 
-            restart = this.add.sprite(game.config.width / 2, game.config.height / 1.7, 'restart')
-                .setDisplaySize(200, 200)
+            this.add.bitmapText(game.config.width / 2, game.config.height/3, 'subTitle', deathMessage, 60, 1)
+                .setOrigin(0.5)
+                .setDepth(4);
+
+            restart = this.add.sprite(game.config.width / 2, game.config.height / 2, 'restart')
+                .setScale(1.5)
                 .setInteractive()
                 .setDepth(4);
 
-            sky = this.add.image(game.config.width / 2, game.config.height / 2, 'sky')
-                .setDisplaySize(game.config.width, game.config.height)
-                .setTint(0xc8c8c8)
-                .setAlpha(0.9)
-                .setDepth(3);
+             menu = this.add.sprite(game.config.width / 2, game.config.height / 1.6, 'menu')
+                .setScale(1.5)
+                .setInteractive()
+                .setDepth(4);
 
             //when click, the button will restart the current scene, game over will be false
             restart.on('pointerdown', function(pointer) {
-                titleMusic.pause();
-                restart.setTintFill(0xffff00, 0xffff00, 0xff0000, 0xff0000);
                 this.scene.restart();
-                console.log('restart');
                 gameOver = false;
                 sales = 0;
                 soul = 0;
+            }, this);
+
+            menu.on('pointerdown', function(pointer){
+                this.scene.start("Title");
             }, this);
         }
     }
@@ -723,34 +737,34 @@ class Level1 extends Phaser.Scene {
                 "..."
             ];
 
-            this.add.text(game.config.width / 2, game.config.height / 2.5, victoryMessage, )
-                .setOrigin(0.5)
-                .setStyle({
-                    font: "50px Verdana",
-                    align: "center",
-                    fill: "#B4FBFB"
-                }).setDepth(4);
+            this.backgroundBlack = this.add.sprite(game.config.width / 2, game.config.height / 2, 'background')
+                .setDepth(3)
+                .setInteractive();
 
-            restart = this.add.sprite(game.config.width / 2, game.config.height / 1.7, 'restart')
-                .setDisplaySize(200, 200)
+            this.add.bitmapText(game.config.width / 2, game.config.height/3, 'subTitle', victoryMessage, 60, 1)
+                .setOrigin(0.5)
+                .setDepth(4);
+
+            restart = this.add.sprite(game.config.width / 2, game.config.height / 2, 'restart')
+                .setScale(1.5)
                 .setInteractive()
                 .setDepth(4);
 
-            sky = this.add.image(game.config.width / 2, game.config.height / 2, 'sky')
-                .setDisplaySize(game.config.width, game.config.height)
-                .setTint(0xc8c8c8)
-                .setAlpha(0.9)
-                .setDepth(3);
+             menu = this.add.sprite(game.config.width / 2, game.config.height / 1.6, 'menu')
+                .setScale(1.5)
+                .setInteractive()
+                .setDepth(4);
 
             //when click, the button will restart the current scene, game over will be false
             restart.on('pointerdown', function(pointer) {
-                titleMusic.pause();
-                restart.setTintFill(0xffff00, 0xffff00, 0xff0000, 0xff0000);
                 this.scene.restart();
-                console.log('restart');
                 gameWin = false;
                 sales = 0;
                 soul = 0;
+            }, this);
+
+             menu.on('pointerdown', function(pointer){
+                this.scene.start("Title");
             }, this);
         }
     }

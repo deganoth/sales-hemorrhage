@@ -128,8 +128,6 @@ Game testers. My work colleagues, family members, nieces and nephews all gave va
 * **Scaling** - While testing across as many devices as possible, some web browsers would not allow scaling to occur between portrait and landscape. 
 This was my error, as I had yet to make use the Phaser 3 scale manager, and was using a scaling function of my own.
 * **Control Layout** - I found most players preferred to have the jump button in the center of the screen. It contradicted my thinking as a console player
-* **Control sticking** - This ended up being a bug between Phaser 3 and two browsers, Firefox and Chrome. If a touch screen control area was held down for too long it would register as being continuously held down, even on loading a new game.
-This was resolved by adding a timer to the touch screen controls.
 * **Purpose** - Initially the game was quite difficult to understand. Without the About section in the menu, it remained  mystery for some testers.
 * **Player Bounds** - Some testers found it frustrating to be limited by having a set of status bars at the top of the screen. This was before the onscreen controls were modified. The screen was quite busy and cluttered.
 

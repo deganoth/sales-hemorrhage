@@ -69,41 +69,50 @@ class Title extends Phaser.Scene {
         this.load.bitmapFont('energyBarFont', 'assets/fonts/digital-7-white.png', 'assets/fonts/digital-7-white.fnt');
 
         //load images
+        this.load.image('background', "assets/images/choose_target_background.png");
+       
         this.load.image('leftarrow', 'assets/images/left_arrow.png');
         this.load.image('rightarrow', 'assets/images/right_arrow.png');
-        this.load.image('mobile-controls', 'assets/new_images/controls_layout.png');
-        this.load.image("start", "assets/new_images/start_button.png");
-        this.load.image("controls", "assets/new_images/controls_button.png");
-        this.load.image("about", "assets/new_images/about_button.png");
-        this.load.image("menu", "assets/new_images/menu_button.png")
-        this.load.image("exit", "assets/new_images/exit_button.png");
-        this.load.image('restart', 'assets/images/restart.png');
+        this.load.image('mobile-controls', 'assets/images/controls_layout.png');
+        this.load.image("start", "assets/images/start_button.png");
+        this.load.image("controls", "assets/images/controls_button.png");
+        this.load.image("about", "assets/images/about_button.png");
+        this.load.image("menu", "assets/images/menu_button.png")
+        this.load.image("exit", "assets/images/exit_button.png");
+        this.load.image('target1', "assets/images/target_one.png");
+        this.load.image('target2', "assets/images/target_two.png");
+        this.load.image('target3', "assets/images/target_three.png");
+        this.load.image('restart', 'assets/images/replay_button.png');
         this.load.image("sky", "assets/images/sky2.png");
         this.load.image("soul", "assets/images/soul_bar.png");
         this.load.image("sales", "assets/images/sales_bar.png");
-        this.load.image("stairs", "assets/new_images/stairs.png");
-        this.load.image("ground", "assets/new_images/platform.png")
+        this.load.image("stairs", "assets/images/stairs.png");
+        this.load.image("ground", "assets/images/platform.png")
 
         //load sprites
-        this.load.spritesheet("bum", "assets/new_images/bum-customer.png",{
+        this.load.spritesheet("bum", "assets/images/bum-customer.png",{
             frameWidth: 66.5,
             frameHeight: 100
         });
-        this.load.spritesheet("fatcat", "assets/new_images/fatcat.png", {
+        this.load.spritesheet("fatcat", "assets/images/fatcat.png", {
             frameWidth: 66.5,
             frameHeight: 100
         });
-        this.load.spritesheet("energy", "assets/new_images/energy_boost.png", {
+        this.load.spritesheet("energy", "assets/images/energy_boost.png", {
             frameWidth: 66.5,
             frameHeight: 100
         });
-        this.load.spritesheet("dude", "assets/new_images/topgun3.png", {
+        this.load.spritesheet("dude", "assets/images/topgun3.png", {
             frameWidth: 66.5,
             frameHeight: 100
         });
-        this.load.spritesheet("explode", "assets/images/explosion2.png", {
-            frameWidth: 48,
-            frameHeight: 48
+        this.load.spritesheet("dollar", "assets/images/dollar_sprite.png",{
+            frameWidth: 66.5,
+            frameHeight: 100
+        });
+        this.load.spritesheet("boost", "assets/images/boost_sprite.png",{
+            frameWidth: 66.5,
+            frameHeight: 100
         });
     }
 
@@ -117,8 +126,8 @@ class Title extends Phaser.Scene {
         });
 
         this.add.text(0, 0, "hack", {
-            font:"1px digital-7", 
-            fill:"#FFFFFF"
+            fontFamily:"digital-7", 
+            fill:"#000000"
         });
 
         this.start = this.add.sprite(game.config.width / 2, game.config.height / 2.3, 'start')
@@ -145,25 +154,65 @@ class Title extends Phaser.Scene {
         this.add.bitmapText(game.config.width / 2, game.config.height/9, 'titleFont', title, 160, 1)
             .setOrigin(0.5); 
 
-        message = [
+        message1 = [
             "Reach your target",
             "Or Keep your Soul",
             
         ];
 
-        this.add.bitmapText(game.config.width / 2, game.config.height/3.5, 'subTitle', message, 60, 1)
+        this.add.bitmapText(game.config.width / 2, game.config.height/3.5, 'subTitle', message1, 60, 1)
             .setOrigin(0.5); 
 
         //loads the scene stated in the brackets
         //adds button to start game. once clicked, the second scene will be loaded
         this.start.on('pointerdown', function(pointer) {
-            titleMusic.stop();
-            this.tweens.add({
-                targets:  titleMusic,
-                volume:   0,
-                duration: 500
-            });
-            this.scene.start("Level1");
+
+            this.backgroundBlack = this.add.sprite(game.config.width / 2, game.config.height / 2.3, 'background')
+                //.setScale(1.5)
+                .setInteractive();
+
+            message2 = [
+                "Choose your",
+                "Target",
+            ];
+
+            this.add.bitmapText(game.config.width / 2, game.config.height/6, 'titleFont', message2, 160, 1)
+                .setDepth(1)
+                .setOrigin(0.5); 
+
+            this.targetOne = this.add.sprite(game.config.width / 2, game.config.height / 2.3, 'target1')
+                .setScale(1.5)
+                .setDepth(1)
+                .setInteractive();
+
+            this.targetOne.on('pointerdown', function(pointer){
+                titleMusic.stop();
+                targetChoice = 10000;
+                this.scene.start("Level1");               
+            }, this);
+
+            this.targetTwo = this.add.sprite(game.config.width / 2, game.config.height / 1.8, 'target2')
+                .setScale(1.5)
+                .setDepth(1)
+                .setInteractive();
+
+            this.targetTwo.on('pointerdown', function(pointer){
+                titleMusic.stop();
+                targetChoice = 20000;
+                this.scene.start("Level1");
+            }, this);
+
+            this.targetThree = this.add.sprite(game.config.width / 2, game.config.height / 1.48, 'target3')
+                .setScale(1.5)
+                .setDepth(1)
+                .setInteractive();
+
+            this.targetThree.on('pointerdown', function(pointer){
+                titleMusic.stop();
+                targetChoice = 50000;
+                this.scene.start("Level1");
+            }, this);
+
         }, this);
 
         this.controls.on('pointerdown', function(pointer) {
