@@ -1,5 +1,5 @@
 
-<img src = "https://raw.githubusercontent.com/deganoth/sales-hemorrhage/master/assets/new_images/hemorrhageBig.png" target= "_blank" style="display: block; margin-left: auto; margin-right: auto; width: 50%;">
+<img src = "https://raw.githubusercontent.com/deganoth/sales-hemorrhage/master/assets/images/hemorrhageBig.png" target= "_blank" style="display: block; margin-left: auto; margin-right: auto; width: 50%;">
 
 # Sales Hemorrhage - A sales based cross platform platformer game.
 
@@ -26,7 +26,7 @@ portrait vs landscape builds. Through tutorial examples I learned how to arrange
 to move between. In the Phaser framework, scenes work like pages of a website. 
 
 ### Design/ Functionality
-<img src="https://raw.githubusercontent.com/deganoth/sales-hemorrhage/master/assets/new_images/color_chart.png" target="_blank" width=350 style="display: block; float: left; padding-right: 30px;">
+<img src="https://raw.githubusercontent.com/deganoth/sales-hemorrhage/master/assets/images/color_chart.png" target="_blank" width=350 style="display: block; float: left; padding-right: 30px;">
 With the theme of the game being a retail environment, A somewhat digital feel has been used. Blocky text with 
 LCD style fonts. These were added via the Phaser bitmap font loading. It allows for custom fonts to be used.
 An earthy color palette was chosen to represent the humdrum life of an employee. 
