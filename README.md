@@ -16,11 +16,12 @@ challenged the user while still maintaining a fun experience.
 ## UX
 
 While the game is designed to be cross platform, it is primarily aimed at mobile users. Keyboard 
-controls are available for desktop playing, with a touch screen system in place for mobile devices.
-This system crates a natural touch screen experience, whith the screen divide into three areas allowing
+controls are available for desktop playing, with a touch screen system in place for mobile devices. 
+The screen is fixed in the portrait layout for both mobile and desktop. 
+This system creates a natural touch screen experience, whith the screen divide into three areas allowing
 movement in three directions, much like the keys on a keyboard do. 
 Image and font visibility was a priority. The player must be able to see themselves onscreen, enemies
-and status bars easily. In my initial [mockup]() I experimented with both landscape and portrait
+and status bars easily. I experimented with both landscape and portrait
 gameplay styles. Portrait seemed the most logical pre testing, and was confirmed during the initial
 portrait vs landscape builds. Through tutorial examples I learned how to arrange a collection of "scenes"
 to move between. In the Phaser framework, scenes work like pages of a website. 
