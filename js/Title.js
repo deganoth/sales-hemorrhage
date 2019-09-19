@@ -85,7 +85,7 @@ class Title extends Phaser.Scene {
         this.load.image("start", "assets/images/start_button.png");
         this.load.image("controls", "assets/images/controls_button.png");
         this.load.image("about", "assets/images/about_button.png");
-        this.load.image("menu", "assets/images/menu_button.png")
+        this.load.image("menu", "assets/images/menu_button.png");
         this.load.image("exit", "assets/images/exit_button.png");
         this.load.image('target1', "assets/images/target_one.png");
         this.load.image('target2', "assets/images/target_two.png");
@@ -95,7 +95,7 @@ class Title extends Phaser.Scene {
         this.load.image("soul", "assets/images/soul_bar.png");
         this.load.image("sales", "assets/images/sales_bar.png");
         this.load.image("stairs", "assets/images/stairs.png");
-        this.load.image("ground", "assets/images/platform.png")
+        this.load.image("ground", "assets/images/platform.png");
 
         //load sprites
         this.load.spritesheet("bum", "assets/images/bum-customer.png",{
@@ -152,7 +152,7 @@ class Title extends Phaser.Scene {
             
         //set parameters
         titleMusic.play({
-            volume: .3,
+            volume: 0.3,
             loop: true
         });
 

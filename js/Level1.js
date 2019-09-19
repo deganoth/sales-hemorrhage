@@ -8,10 +8,10 @@ class Level1 extends Phaser.Scene {
     create() {
 
         //play main level music
-        levelOneMusic = this.sound.add('playing')
+        levelOneMusic = this.sound.add('playing');
             
         levelOneMusic.play({
-            volume: .3,
+            volume: 0.3,
             loop: true
         });
 
