@@ -650,6 +650,7 @@ class Level1 extends Phaser.Scene {
             });
             this.physics.pause();
             gameWin = true;
+            gameOver = true;
             this.gameWinScreen();
         }
 
