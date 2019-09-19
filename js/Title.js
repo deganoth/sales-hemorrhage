@@ -6,6 +6,7 @@ class Title extends Phaser.Scene {
     }
 
     preload() {
+
         //load audio
         this.load.audio('menu', [
             'assets/audio/003 Fight.ogg',
@@ -154,7 +155,6 @@ class Title extends Phaser.Scene {
         message1 = [
             "Reach your target",
             "Or Keep your Soul",
-            
         ];
 
         this.add.bitmapText(game.config.width / 2, game.config.height/3.5, 'subTitle', message1, 60, 1)
@@ -165,7 +165,6 @@ class Title extends Phaser.Scene {
         this.start.on('pointerdown', function(pointer) {
 
             this.backgroundBlack = this.add.sprite(game.config.width / 2, game.config.height / 2.3, 'background')
-                //.setScale(1.5)
                 .setInteractive();
 
             message2 = [

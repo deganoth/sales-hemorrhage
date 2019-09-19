@@ -648,7 +648,6 @@ class Level1 extends Phaser.Scene {
                 volume:   0,
                 duration: 500
             });
-    
             this.physics.pause();
             gameWin = true;
             this.gameWinScreen();
@@ -688,6 +687,7 @@ class Level1 extends Phaser.Scene {
 
             //when click, the button will restart the current scene, game over will be false
             restart.on('pointerdown', function(pointer) {
+                levelOneMusic.stop();
                 this.scene.restart();
                 gameOver = false;
                 sales = 0;
@@ -696,6 +696,8 @@ class Level1 extends Phaser.Scene {
 
             menu.on('pointerdown', function(pointer){
                 levelOneMusic.stop();
+                sales = 0;
+                soul = 0;
                 this.scene.start("Title");
             }, this);
         }
@@ -749,6 +751,7 @@ class Level1 extends Phaser.Scene {
 
             //when click, the button will restart the current scene, game over will be false
             restart.on('pointerdown', function(pointer) {
+                levelOneMusic.stop();
                 this.scene.restart();
                 gameWin = false;
                 sales = 0;
@@ -757,6 +760,8 @@ class Level1 extends Phaser.Scene {
 
              menu.on('pointerdown', function(pointer){
                 levelOneMusic.stop();
+                sales = 0;
+                soul = 0;
                 this.scene.start("Title");
             }, this);
         }
