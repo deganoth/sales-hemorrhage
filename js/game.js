@@ -33,6 +33,7 @@ var config = {
     scene: [Title, Level1, Controls, About]
 };
 
+var loadingText;
 var titleMusic;
 var levelOneMusic;
 var title;
@@ -44,6 +45,8 @@ var instructions;
 var enemyDescription;
 var sky;
 var skyWall;
+var ground;
+var groundLevel;
 var dollar;
 var boost;
 var player;
@@ -55,13 +58,12 @@ var j;
 var l;
 var r;
 var energyBar;
-var ground;
 var hudBox;
-var soulValue;
-var soul = 0;
+var energyValue;
+var energyAdd = 0;
 var smallValue = 5;
 var bigValue = 25;
-var soulBarBackground;
+var energyBarBackground;
 var sales = 0;
 var salesBar;
 var regularSale = 50;
@@ -78,3 +80,4 @@ var restart;
 var menu;
 
 var game = new Phaser.Game(config);
+

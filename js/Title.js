@@ -1,11 +1,18 @@
 //recives contorl from the primary game created
 class Title extends Phaser.Scene {
     constructor() {
-        //scene identifier is bootScene
+        //scene identifier is Title
         super("Title");
     }
 
     preload() {
+
+        //loading text before scene starts
+        loadingText = this.add.text(game.config.width/2, game.config.height/2 ,"Loading...", {
+            fontFamily: 'digital-7',
+            fontSize: '100px', 
+            fill: '#fff'
+        }).setOrigin(0.5);
 
         //load audio
         this.load.audio('menu', [
@@ -115,35 +122,15 @@ class Title extends Phaser.Scene {
             frameWidth: 66.5,
             frameHeight: 100
         });
+
     }
 
     create() {
 
-        titleMusic = this.sound.add('menu')
-            
-        titleMusic.play({
-            volume: .3,
-            loop: true
-        });
+        //set loading font to be not visible
+        loadingText.setVisible(false);
 
-        this.add.text(0, 0, "hack", {
-            fontFamily:"digital-7", 
-            fill:"#000000"
-        });
-
-        this.start = this.add.sprite(game.config.width / 2, game.config.height / 2.3, 'start')
-            .setScale(1.5)
-            .setInteractive();
-
-        this.controls = this.add.sprite(game.config.width / 2, game.config.height / 1.8, 'controls')
-            .setScale(1.5)
-            .setInteractive();
-
-        this.about = this.add.sprite(game.config.width / 2, game.config.height / 1.48, 'about')
-            .setScale(1.5)
-            .setInteractive();
-
-
+        //add logo and tagline
         title = [
             "sales",
             "hemorrhage",
@@ -160,8 +147,29 @@ class Title extends Phaser.Scene {
         this.add.bitmapText(game.config.width / 2, game.config.height/3.5, 'subTitle', message1, 60, 1)
             .setOrigin(0.5); 
 
-        //loads the scene stated in the brackets
-        //adds button to start game. once clicked, the second scene will be loaded
+        //play title scene music
+        titleMusic = this.sound.add('menu');
+            
+        //set parameters
+        titleMusic.play({
+            volume: .3,
+            loop: true
+        });
+
+        //add menu buttons
+        this.start = this.add.sprite(game.config.width / 2, game.config.height / 2.3, 'start')
+            .setScale(1.5)
+            .setInteractive();
+
+        this.controls = this.add.sprite(game.config.width / 2, game.config.height / 1.8, 'controls')
+            .setScale(1.5)
+            .setInteractive();
+
+        this.about = this.add.sprite(game.config.width / 2, game.config.height / 1.48, 'about')
+            .setScale(1.5)
+            .setInteractive();
+
+        //loading target choice menu once start button is pressed
         this.start.on('pointerdown', function(pointer) {
 
             this.backgroundBlack = this.add.sprite(game.config.width / 2, game.config.height / 2.3, 'background')
@@ -181,6 +189,7 @@ class Title extends Phaser.Scene {
                 .setDepth(1)
                 .setInteractive();
 
+            //sets the target goal for the level instance.
             this.targetOne.on('pointerdown', function(pointer){
                 titleMusic.stop();
                 targetChoice = 10000;
@@ -211,6 +220,7 @@ class Title extends Phaser.Scene {
 
         }, this);
 
+        //remaining menu items button functions
         this.controls.on('pointerdown', function(pointer) {
             titleMusic.pause();
             this.scene.start("Controls");

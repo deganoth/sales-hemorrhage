@@ -1,13 +1,14 @@
 //recives contorl from the primary game created
 class About extends Phaser.Scene {
     constructor() {
-        //scene identifier is bootScene
+        //scene identifier is About
         super("About");
     }
 
     create() {
     
         titleMusic.resume();
+
         //enemies title description
         this.add.bitmapText(game.config.width / 2, game.config.height/30, 'titleFont', 'targets', 100, 1)
             .setOrigin(0.5); 

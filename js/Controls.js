@@ -1,7 +1,7 @@
 //recives contorl from the primary game created
 class Controls extends Phaser.Scene {
     constructor() {
-        //scene identifier is bootScene
+        //scene identifier is Controls
         super("Controls");
     }
 
@@ -34,7 +34,6 @@ class Controls extends Phaser.Scene {
 
         this.add.image(game.config.width / 2, game.config.height / 1.8, 'mobile-controls')
             .setScale(0.7)
-            //.setOrigin(0)
             .setDepth(1);
 
         //back to main menu button

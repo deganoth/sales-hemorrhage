@@ -1,12 +1,13 @@
 //recives control from the primary game created
 class Level1 extends Phaser.Scene {
     constructor() {
-        //scene identifier is playGame
+        //scene identifier is Level1
         super("Level1");
     }
 
     create() {
 
+        //play main level music
         levelOneMusic = this.sound.add('playing')
             
         levelOneMusic.play({
@@ -14,6 +15,7 @@ class Level1 extends Phaser.Scene {
             loop: true
         });
 
+        //create player as physics object
         player = this.physics.add.sprite(game.config.width / 1.6, game.config.height / 2.8, 'dude')
             .setDisplaySize(game.config.height / 14.2, game.config.height / 10)
             .setSize(25, 80)
@@ -21,15 +23,16 @@ class Level1 extends Phaser.Scene {
             .setInteractive()
             .setCollideWorldBounds(true)
             .setDepth(1)
-            .setBounce(0.2)
+            .setBounce(0.2);
 
+        //initialize game objects to make them reference friendly later on.
         dollar = this.add.sprite(-100, -100, 'dollar')
             .setDepth(4);
 
         boost = this.add.sprite(-100, -100, 'boost')
             .setDepth(4);
 
-        ground = this.physics.add.group();
+        groundLevel = this.physics.add.group();
 
         health = this.physics.add.group();
 
@@ -37,6 +40,7 @@ class Level1 extends Phaser.Scene {
 
         cheapCustomer = this.physics.add.group();
 
+        //start game object in scene
         this.makeSky();   
 
         this.makeGround();
@@ -51,27 +55,31 @@ class Level1 extends Phaser.Scene {
 
         this.makeAnimations();
 
+        //make desktop controls
         cursors = this.input.keyboard.createCursorKeys();
 
         //alternate keys added for controls
         controls = this.input.keyboard.addKeys('W,S,A,D,P,O');
 
+        //create physics overlaps and collisions between game objects, perform functions on overlap.
         this.physics.add.overlap(player, cheapCustomer, this.destroyCheapCustomer, null, this);
         this.physics.add.overlap(player, richCustomer, this.destroyRichCustomer, null, this);
-        this.physics.add.collider(player, ground);
+        this.physics.add.collider(player, groundLevel);
         this.physics.add.collider(cheapCustomer, cheapCustomer);
     }
 
     update() {
+
+        //update game per millissecond based on Phaser. only do so if gameOver is not true
         if (!gameOver) {
-            this.updateControls();
+            this.updatePlayerControls();
             this.updateControlsCheapCustomer();
             this.updateControlsRichCustomer();
             this.resetSky();
             this.resetGround();
             this.resetCheapCustomer();
             this.resetRichCustomer();
-            this.soulBarText();
+            this.energyBarText();
             this.gameEnd();
         }
     }
@@ -168,14 +176,10 @@ class Level1 extends Phaser.Scene {
     }
 
     makeMobileControls() {
+        //make mobile contorls only if they current device has a touch screen
         if (this.sys.game.device.input.touch) {
 
-            hudBox = this.add.image(0, game.config.height / 1.18, 'soul')
-                .setDisplaySize(game.config.width, 200)
-                .setDepth(0)
-                .setOrigin(0)
-                .setAlpha(0);
-
+            //each variable below describes a portion of the device screen. once touched, the assocaited actions below will happen.
             l = this.add.sprite(game.config.width / 6, game.config.height/2, 'leftarrow')
                 .setDisplaySize(game.config.width/3, game.config.height)
                 .setDepth(0)
@@ -225,8 +229,8 @@ class Level1 extends Phaser.Scene {
         }
     }
 
-    updateControls() {
-
+    updatePlayerControls() {
+        //updates the controls and sets the velocity of the player accordingly.
         if (cursors.left.isDown || controls.A.isDown || left) {
             player.setVelocityX(-500);
             player.anims.play('left', true);
@@ -255,6 +259,7 @@ class Level1 extends Phaser.Scene {
     }
 
     updateControlsCheapCustomer(bum){
+        //similar to the update player controls, but for one customer. slightly different variables make their behaviour vary.
         cheapCustomer.children.iterate(function(child) {
                 if(child.body.touching.down && cursors.left.isDown || child.body.touching.down && controls.A.isDown || child.body.touching.down && left){
                     child.setVelocityX(200);
@@ -289,6 +294,7 @@ class Level1 extends Phaser.Scene {
     }
 
     makeSky() {
+        //make the background as a physics object that only moves at the velocity set
         skyWall = this.physics.add.group({
             key: 'sky',
             repeat: 4,
@@ -304,13 +310,14 @@ class Level1 extends Phaser.Scene {
                 .setDisplaySize(game.config.width, game.config.height / 2.8)
                 .setDepth(0)
                 .setImmovable(true)
-                .setVelocityY(50);
+                .setVelocityY(30);
 
             child.body.setAllowGravity(false);
         });
     }
 
     resetSky(sky) {
+        //resets the position of the scky group to create a seamless flow of the object
         skyWall.children.iterate(function(child) {
             if (child.y > game.config.height + (game.config.height / 3)) {
                 child.y = -(game.config.height / 3);
@@ -319,7 +326,8 @@ class Level1 extends Phaser.Scene {
     }
 
     makeGround() {
-        ground = this.physics.add.group({
+        //creates platforms for the player to jump through. Similar to the makeSky function with regard to a constant flow of platforms with even Y axis spacing
+        groundLevel = this.physics.add.group({
             key: 'ground',
             repeat: 4,
             collideWorldBounds: true,
@@ -331,7 +339,7 @@ class Level1 extends Phaser.Scene {
             },
         });
 
-        ground.children.iterate(function(child) {
+        groundLevel.children.iterate(function(child) {
             child
                 .setDisplaySize(game.config.width / 1.6, game.config.height / 3)
                 .setSize(310, 30)
@@ -345,14 +353,15 @@ class Level1 extends Phaser.Scene {
         this.physics.add.collider(player, ground);
     }
 
-    resetGround(sales) {
-        ground.children.iterate(function(child) {
+    resetGround(ground) {
+        groundLevel.children.iterate(function(child) {
             if (child.y > game.config.height + (game.config.height / 3)) {
                 child.y = -(game.config.height / 3);
             }
         });
     }
 
+    //creates an energy token to be collected be the player. 
     makeEnergy() {
         health = this.physics.add.group({
             key: 'energy',
@@ -374,11 +383,13 @@ class Level1 extends Phaser.Scene {
             child.anims.play('energy_anim', true);
         });
 
-        this.physics.add.collider(health, ground);
+        //creates collisions and overlaps for the health object
+        this.physics.add.collider(health, groundLevel);
         this.physics.add.collider(health, cheapCustomer);
         this.physics.add.overlap(player, health, this.addEnergy, null, this);
 
-        if (soulValue <= 350) {
+        //a situation where the player has an energy level below a division of the energy bar background, set to the width of the screen. If this is true, a greater number of health tokens appear
+        if (energyValue <= 350) {
             health = this.physics.add.group({
                 key: 'energy',
                 repeat: 3,
@@ -399,21 +410,24 @@ class Level1 extends Phaser.Scene {
                 child.anims.play('energy_anim', true);
             });
 
-            this.physics.add.collider(health, ground);
+            this.physics.add.collider(health, groundLevel);
             this.physics.add.collider(health, cheapCustomer);
             this.physics.add.overlap(player, health, this.addEnergy, null, this);
         }
     }
 
     addEnergy(player, energy) {
-
+        //adds energy to the players energy bar
         boost.x = energy.x;
         boost.y = energy.y;
+
+        //plays an animation on collecting the health token
         boost.anims.play("health_collect", true);
 
         boost = this.add.sprite(-100, -100, 'boost')
             .setDepth(4);
 
+        //plays randomly rom a range of audio files per player and health interaction
         this.sound.play(Phaser.Math.RND.pick﻿([
             'coffee_one', 
             'coffee_two', 
@@ -422,18 +436,23 @@ class Level1 extends Phaser.Scene {
             ]
         ));
 
+        //decreases sales and sets the sales text to reflect this
         sales -= 50;
         salesBar.setText('sales:$' + sales);
 
-        soul += 100;
-        soulBarBackground.setDisplaySize((game.config.width / 1.06) + soul, game.config.width / 12)
+        //increases the energy bar to refelct the value shown
+        energyAdd += 100;
+        energyBarBackground.setDisplaySize((game.config.width / 1.06) + energyAdd, game.config.width / 12);
 
+        //disables the health token and removes it from the screen
         energy.disableBody(true, true);
     }
 
     makeRichCustomer() {
         richCustomer = this.physics.add.group({
             key: 'fatcat',
+
+            //chooses a range per level to load a quantity of this sprite
             repeat: Phaser.Math.Between(0, 3),
             collideWorldBounds: true
         });
@@ -451,7 +470,7 @@ class Level1 extends Phaser.Scene {
             child.y = -100;
         });
 
-        this.physics.add.collider(richCustomer, ground);
+        this.physics.add.collider(richCustomer, groundLevel);
         this.physics.add.collider(richCustomer, cheapCustomer);
         this.physics.add.overlap(player, richCustomer, this.destroyRichCustomer, null, this);
 
@@ -487,11 +506,12 @@ class Level1 extends Phaser.Scene {
         sales += bigSale;
         salesBar.setText('sales:$' + sales);
 
-        soul -= bigValue;
-        soulBarBackground.setDisplaySize((game.config.width / 1.06) + soul, game.config.width / 12)
+        energyAdd -= bigValue;
+        energyBarBackground.setDisplaySize((game.config.width / 1.06) + energyAdd, game.config.width / 12);
 
         fatcat.disableBody(true, true);
 
+        //re enables the initial richCustomer group by checking to see if the quantity available on screen is 0
         if (richCustomer.countActive(true) === 0) {
             richCustomer.children.iterate(function(child) {
                 child.enableBody(true, child.x, 0, true, true)
@@ -523,7 +543,7 @@ class Level1 extends Phaser.Scene {
             child.y = -100;
         });
 
-        this.physics.add.collider(cheapCustomer, ground);
+        this.physics.add.collider(cheapCustomer, groundLevel);
 
     }
 
@@ -559,8 +579,8 @@ class Level1 extends Phaser.Scene {
         sales += regularSale;
         salesBar.setText('sales:$' + sales);
 
-        soul -= smallValue;
-        soulBarBackground.setDisplaySize((game.config.width / 1.06) + soul, game.config.width / 12);
+        energyAdd -= smallValue;
+        energyBarBackground.setDisplaySize((game.config.width / 1.06) + energyAdd, game.config.width / 12);
 
         bum.disableBody(true, true);
         if (cheapCustomer.countActive(true) === 0) {
@@ -577,11 +597,11 @@ class Level1 extends Phaser.Scene {
 
     makeHud() {
 
+        //creates an area at the top of the screen to sho sales and energy levels. Making use of the physics object to limit player movement beyond this box.
         hudBox = this.physics.add.image(0, 0, 'background')
             .setDisplaySize(game.config.width, game.config.width / 6)
             .setDepth(1)
             .setOrigin(0)
-            
             .setImmovable(true);
         hudBox.body.setAllowGravity(false);
 
@@ -591,7 +611,7 @@ class Level1 extends Phaser.Scene {
             .setDepth(2)
             .setOrigin(0); 
 
-        soulBarBackground = this.add.image(20, 0, 'soul')
+        energyBarBackground = this.add.image(20, 0, 'soul')
             .setDisplaySize(game.config.width / 1.06, game.config.width / 12)
             .setAlpha(0.6)
             .setDepth(1)
@@ -602,43 +622,54 @@ class Level1 extends Phaser.Scene {
             .setOrigin(0); 
     }
 
-    soulBarText() {
+    energyBarText() {
+        //updates the energy bar text based on the width of the red energy bar behind the text.
 
-        if (soul >= 0) {
+        if (energyAdd >= 0) {
             energyBar.setText('energy:' + 'very good');
         }
-        else if (soul >= -187.5) {
+        else if (energyAdd >= -187.5) {
             energyBar.setText('energy:' + 'okay');
         }
-        else if (soul >= -375) {
+        else if (energyAdd >= -375) {
             energyBar.setText('energy:' + 'worse');
         }
-        else if (soul >= -562.5) {
+        else if (energyAdd >= -562.5) {
             energyBar.setText('energy:' + 'much worse');
         }
-        else if (soul >= -680) {
+        else if (energyAdd >= -680) {
             energyBar.setText('energy:' + 'terrible');
 
         }
     }
 
     gameEnd() {
-        soulValue = soulBarBackground.displayWidth;
+
+        //ends the game based on the player Y position, energy bar or sales levels
+        energyValue = energyBarBackground.displayWidth;
         playerY = player.y;
 
-        if (soulValue <= 0 || playerY > game.config.height) {
+        if (energyValue <= 0 || playerY > game.config.height) {
+
+            //fades out the music using the tween method from Phaser
             this.tweens.add({
                 targets:  levelOneMusic,
                 volume:   0,
                 duration: 500
             });
             this.physics.pause();
-            soulBarBackground.setDisplaySize(0, 0);
+
+            //resets the energy bar display size
+            energyBarBackground.setDisplaySize(0, 0);
             gameOver = true;
+
+            //calls the restart screen
             this.restartScreen();
         }
-        else if (soulValue > 708) {
-            soulBarBackground.setDisplaySize(game.config.width / 1.06, game.config.width / 12);
+
+        //limits the energy bar background from going beyond a max size. In this case, the screen width
+        else if (energyValue > 708) {
+            energyBarBackground.setDisplaySize(game.config.width / 1.06, game.config.width / 12);
         }
 
         if (sales >= targetChoice) {
@@ -692,13 +723,13 @@ class Level1 extends Phaser.Scene {
                 this.scene.restart();
                 gameOver = false;
                 sales = 0;
-                soul = 0;
+                energyAdd = 0;
             }, this);
 
             menu.on('pointerdown', function(pointer){
                 levelOneMusic.stop();
                 sales = 0;
-                soul = 0;
+                energyAdd = 0;
                 this.scene.start("Title");
             }, this);
         }
@@ -707,19 +738,19 @@ class Level1 extends Phaser.Scene {
     gameWinScreen() {
         if (gameWin) {
 
-            if (soul >= 0) {
+            if (energyAdd >= 0) {
                 energyBar.setText('very good');
             }
-            else if (soul >= -187.5) {
+            else if (energyAdd >= -187.5) {
                 energyBar.setText('okay');
             }
-            else if (soul >= -375) {
+            else if (energyAdd >= -375) {
                 energyBar.setText('worse');
             }
-            else if (soul >= -562.5) {
+            else if (energyAdd >= -562.5) {
                 energyBar.setText('much worse');
             }
-            else if (soul >= -680) {
+            else if (energyAdd >= -680) {
                 energyBar.setText('terrible');
             }
 
@@ -756,13 +787,13 @@ class Level1 extends Phaser.Scene {
                 this.scene.restart();
                 gameWin = false;
                 sales = 0;
-                soul = 0;
+                energyAdd = 0;
             }, this);
 
              menu.on('pointerdown', function(pointer){
                 levelOneMusic.stop();
                 sales = 0;
-                soul = 0;
+                energyAdd = 0;
                 this.scene.start("Title");
             }, this);
         }
