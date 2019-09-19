@@ -730,6 +730,7 @@ class Level1 extends Phaser.Scene {
                 levelOneMusic.stop();
                 sales = 0;
                 energyAdd = 0;
+                gameOver = false;
                 this.scene.start("Title");
             }, this);
         }
@@ -786,12 +787,15 @@ class Level1 extends Phaser.Scene {
                 levelOneMusic.stop();
                 this.scene.restart();
                 gameWin = false;
+                gameOver = false;
                 sales = 0;
                 energyAdd = 0;
             }, this);
 
              menu.on('pointerdown', function(pointer){
                 levelOneMusic.stop();
+                gameWin = false;
+                gameOver = false;
                 sales = 0;
                 energyAdd = 0;
                 this.scene.start("Title");
