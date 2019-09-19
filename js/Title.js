@@ -183,7 +183,7 @@ class Title extends Phaser.Scene {
 
             this.targetOne.on('pointerdown', function(pointer){
                 titleMusic.stop();
-                targetChoice = 100;
+                targetChoice = 10000;
                 this.scene.start("Level1");               
             }, this);
 
