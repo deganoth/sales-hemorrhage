@@ -133,7 +133,7 @@ This was my error, as I had yet to make use the Phaser 3 scale manager, and was 
 * **Player Bounds** - Some testers found it frustrating to be limited by having a set of status bars at the top of the screen. This was before the onscreen controls were modified. The screen was quite busy and cluttered.
 
 #### Known Errors
-While testing in all popular browsers, Firfox revealed a color based error; "Expeceted color but found '0' ". This is a known error regarding specific color codes. It referes to the use of "0x" rather than "#" for specifying or changing colours of text items onscreen. I made use of bitmap text primarily, so the error must be read form the .fnt files contained in the project folders.
+While testing in all popular browsers, Firfox revealed a color based error; "Expected color but found '0' ". This is a known error regarding specific color codes. It referes to the use of "0x" rather than "#" for specifying or changing hex colour values of text items onscreen. I made use of bitmap text primarily, so the error must be read form the .fnt files contained in the project folders.
 
 
 ## Deployment
