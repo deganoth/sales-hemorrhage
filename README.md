@@ -114,7 +114,7 @@ This allowed my to push to github while using my local server. It functions in m
 
 ### Testing
 
-##### Firebox/Chrome Developer tools
+#### Firebox/Chrome Developer tools
 Making use of the inspector console to check functionality, and investigate errors was vital for a smooth running game.
 I found this invaluable. Phaser 3 errors read quite easily, with experience. In addition, the scaling issues were resolved by using the Responsive Design mode. Screen that were tested on are:
 * iPhone 5 - 8 
@@ -133,7 +133,7 @@ This was my error, as I had yet to make use the Phaser 3 scale manager, and was 
 * **Player Bounds** - Some testers found it frustrating to be limited by having a set of status bars at the top of the screen. This was before the onscreen controls were modified. The screen was quite busy and cluttered.
 
 #### Known Errors
-While testing in all popular browsers, Firfox revealed a color based error; "Expeceted color but found '0' ". This is a know error regarding specific color codes. It referes to the use of "0x" rather than "#" for specifying or changing colours of text items onscreen. I made use of bitmap text primarily, so the error must be read form the .fnt files contained in the project folders.
+While testing in all popular browsers, Firfox revealed a color based error; "Expeceted color but found '0' ". This is a known error regarding specific color codes. It referes to the use of "0x" rather than "#" for specifying or changing colours of text items onscreen. I made use of bitmap text primarily, so the error must be read form the .fnt files contained in the project folders.
 
 
 ## Deployment
