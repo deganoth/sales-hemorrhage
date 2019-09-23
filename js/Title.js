@@ -6,12 +6,11 @@ class Title extends Phaser.Scene {
     }
 
     preload() {
-
         //loading text before scene starts
         loadingText = this.add.text(game.config.width/2, game.config.height/2 ,"Loading...", {
             fontFamily: 'digital-7',
             fontSize: '100px', 
-            fill: '#fff'
+            //fill: '#fff'
         }).setOrigin(0.5);
 
         //load audio

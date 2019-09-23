@@ -80,4 +80,3 @@ var restart;
 var menu;
 
 var game = new Phaser.Game(config);
-

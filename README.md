@@ -124,13 +124,17 @@ I found this invaluable. Phaser 3 errors read quite easily, with experience. In 
 * iPad Pro
 * iPad 2
 
-##### Manual User Tests
+#### Manual User Tests
 Game testers. My work colleagues, family members, nieces and nephews all gave valid feedback throughout development. Some of the key issues were:
 * **Scaling** - While testing across as many devices as possible, some web browsers would not allow scaling to occur between portrait and landscape. 
 This was my error, as I had yet to make use the Phaser 3 scale manager, and was using a scaling function of my own.
 * **Control Layout** - I found most players preferred to have the jump button in the center of the screen. It contradicted my thinking as a console player
 * **Purpose** - Initially the game was quite difficult to understand. Without the About section in the menu, it remained  mystery for some testers.
 * **Player Bounds** - Some testers found it frustrating to be limited by having a set of status bars at the top of the screen. This was before the onscreen controls were modified. The screen was quite busy and cluttered.
+
+#### Known Errors
+While testing in all popular browsers, Firfox revealed a color based error; "Expeceted color but found '0' ". This is a know error regarding specific color codes. It referes to the use of "0x" rather than "#" for specifying or changing colours of text items onscreen. I made use of bitmap text primarily, so the error must be read form the .fnt files contained in the project folders.
+
 
 ## Deployment
 I made use of GitHub to host this project. A link above allows a user to play the web application in a browser window. To contribute to or clone for learning purposes, git provides an option as the top right of the master repository. 

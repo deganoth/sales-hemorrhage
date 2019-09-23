@@ -421,7 +421,7 @@ class Level1 extends Phaser.Scene {
         boost.x = energy.x;
         boost.y = energy.y;
 
-        //plays an animation on collecting the health token
+        //plays an animation on collecting the health token at the location of the toekn becoming disabled
         boost.anims.play("health_collect", true);
 
         boost = this.add.sprite(-100, -100, 'boost')
@@ -480,6 +480,7 @@ class Level1 extends Phaser.Scene {
         richCustomer.children.iterate(function(child) {
             if (child.y > game.config.height) {
                 child.y = -100;
+                //sets the X value to a value between 0 and the screen width
                 var respawnX = Phaser.Math.Between(0, game.config.width);
                 child.x = respawnX;
             }
